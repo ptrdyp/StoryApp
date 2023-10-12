@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Story App</string>
+    <string name="foto">Foto</string>
+
+    <string name="splash_text">App by @ptrdyp</string>
+    <string name="login_title">Selamat datang di Story App :)</string>
+    <string name="login_message">Silakan login menggunakan akun anda yang sudah terdaftar.</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="asktoregister">Belum punya akun?</string>
+    <string name="register">Register</string>
+    <string name="register_title">Lengkapi data dirimu di bawah ini untuk mendaftar akun!</string>
+    <string name="name">Nama</string>
+    <string name="asktoLogin">Sudah punya akun?</string>
+
+    <string name="password_error">Password tidak boleh kurang dari 8 karakter"</string>
+    <string name="email_error">Masukan Email yang benar!</string>
+</resources>
