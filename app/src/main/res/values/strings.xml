@@ -16,4 +16,7 @@
 
     <string name="password_error">Password tidak boleh kurang dari 8 karakter"</string>
     <string name="email_error">Masukan Email yang benar!</string>
+    <string name="title_welcome_page">Selamat datang di Story App</string>
+    <string name="message_welcome_page">Platform untuk berbagi segala cerita Anda hari ini. Kami mengundang Anda untuk menjelajahi berbagai kisah inspiratif yang kami miliki, atau lebih jauh lagi, berbagi cerita Anda sendiri. </string>
+    <string name="message_welcome_page_2">Klik login untuk memulai!</string>
 </resources>
