@@ -10,6 +10,7 @@ import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.viewModels
 import com.dicoding.storyapp.R
 import com.dicoding.storyapp.databinding.ActivityRegisterBinding
@@ -19,7 +20,7 @@ import com.dicoding.storyapp.ui.login.LoginActivity
 class RegisterActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityRegisterBinding
-
+    private lateinit var factory: ViewModelFactory
     private val registerViewModel by viewModels<RegisterViewModel> {
         ViewModelFactory.getInstance()
     }
@@ -28,6 +29,8 @@ class RegisterActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        factory = ViewModelFactory.getInstance()
 
         setupView()
         setupAction()
@@ -48,11 +51,56 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun setupAction(){
+        binding.apply {
+            registerButton.setOnClickListener {
+                when {
+                    edRegisterName.length() == 0 -> {
+                        edRegisterName.error = getString(R.string.required_field)
+                    }
+                    edRegisterEmail.length() == 0 -> {
+                        edRegisterEmail.error = getString(R.string.required_field)
+                    }
+                    edRegisterPassword.length() == 0 -> {
+                        edRegisterPassword.error = getString(R.string.required_field)
+                    }
+                    else -> {
+                        edRegisterName.error = null
+                        edRegisterEmail.error = null
+                        edRegisterPassword.error = null
+
+                        showLoading()
+                        postText()
+                        showToast()
+                        moveActivity()
+                    }
+                }
+            }
+        }
+
         val tvToLogin = findViewById<TextView>(R.id.tv_toLogin)
 
         tvToLogin.setOnClickListener{
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
+        }
+    }
+
+    private fun postText(){
+        binding.apply {
+            registerViewModel.postRegister(
+                edRegisterName.text.toString(),
+                edRegisterEmail.text.toString(),
+                edRegisterPassword.text.toString()
+            )
+        }
+    }
+
+    private fun moveActivity(){
+        registerViewModel.registerResponse.observe(this){ response ->
+            if (!response.error){
+                startActivity(Intent(this, LoginActivity::class.java))
+                finish()
+            }
         }
     }
 
@@ -96,4 +144,19 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
+    private fun showLoading(){
+        registerViewModel.isLoading.observe(this){
+            binding.progressBar.visibility = if (it) View.VISIBLE else View.GONE
+        }
+    }
+
+    private fun showToast(){
+        registerViewModel.toastText.observe(this){
+            it.getContentIfNotHandled()?.let { toastText ->
+                Toast.makeText(
+                    this, toastText,Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
 }

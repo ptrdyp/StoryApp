@@ -13,6 +13,7 @@
     <string name="register_title">Lengkapi data dirimu di bawah ini untuk mendaftar akun!</string>
     <string name="name">Nama</string>
     <string name="asktoLogin">Sudah punya akun?</string>
+    <string name="required_field">Data ini harus diisi!</string>
 
     <string name="password_error">Password tidak boleh kurang dari 8 karakter"</string>
     <string name="email_error">Masukan Email yang benar!</string>
