@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Story App</string>
+    <string name="foto">Foto</string>
+
+    <string name="login_title">Masuk untuk Memulai Story App</string>
+    <string name="login_message">Silakan gunakan akun terdaftar Anda untuk masuk.</string>
+    <string name="email">Email</string>
+    <string name="password">Kata Sandi</string>
+    <string name="login">Masuk</string>
+    <string name="asktoregister">Belum punya akun?</string>
+    <string name="register">Daftar</string>
+    <string name="register_title">Lengkapi data dirimu di bawah ini untuk mendaftar akun!</string>
+    <string name="name">Nama</string>
+    <string name="asktoLogin">Sudah punya akun?</string>
+    <string name="required_field">Data ini harus diisi!</string>
+
+    <string name="password_error">Kata sandi tidak boleh kurang dari 8 karakter</string>
+    <string name="email_error">Masukan Email yang benar!</string>
+    <string name="title_welcome_page">Selamat datang di Story App :)</string>
+    <string name="message_welcome_page">Platform untuk berbagi segala cerita Anda hari ini. Kami mengundang Anda untuk menjelajahi berbagai kisah inspiratif yang kami miliki, atau lebih jauh lagi, berbagi cerita Anda sendiri. </string>
+    <string name="message_welcome_page_2">Klik Masuk untuk memulai!</string>
+    <string name="isError">Terjadi kesalahan</string>
+</resources>

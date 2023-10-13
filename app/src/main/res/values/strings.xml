@@ -1,24 +1,23 @@
 <resources>
     <string name="app_name">Story App</string>
-    <string name="foto">Foto</string>
+    <string name="foto">Photo</string>
 
-    <string name="splash_text">App by @ptrdyp</string>
-    <string name="login_title">Selamat datang di Story App :)</string>
-    <string name="login_message">Silakan login menggunakan akun anda yang sudah terdaftar.</string>
+    <string name="login_title">Sign in to Start the Stories App</string>
+    <string name="login_message">Please use your registered account to log in.</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="login">Login</string>
-    <string name="asktoregister">Belum punya akun?</string>
+    <string name="asktoregister">Don\'t have an account yet?</string>
     <string name="register">Register</string>
-    <string name="register_title">Lengkapi data dirimu di bawah ini untuk mendaftar akun!</string>
-    <string name="name">Nama</string>
-    <string name="asktoLogin">Sudah punya akun?</string>
-    <string name="required_field">Data ini harus diisi!</string>
+    <string name="register_title">Complete your data below to register an account!</string>
+    <string name="name">Name</string>
+    <string name="asktoLogin">Already have an account?</string>
+    <string name="required_field">This data must be filled in!</string>
 
-    <string name="password_error">Password tidak boleh kurang dari 8 karakter"</string>
-    <string name="email_error">Masukan Email yang benar!</string>
-    <string name="title_welcome_page">Selamat datang di Story App</string>
-    <string name="message_welcome_page">Platform untuk berbagi segala cerita Anda hari ini. Kami mengundang Anda untuk menjelajahi berbagai kisah inspiratif yang kami miliki, atau lebih jauh lagi, berbagi cerita Anda sendiri. </string>
-    <string name="message_welcome_page_2">Klik login untuk memulai!</string>
-    <string name="isError">Terjadi kesalahan</string>
+    <string name="password_error">The password must not be less than 8 characters.</string>
+    <string name="email_error">Enter the correct Email!</string>
+    <string name="title_welcome_page">Welcome to Story App :)</string>
+    <string name="message_welcome_page">Platform to share all your stories today. We invite you to explore the inspiring stories we have, or go even further, share your own.</string>
+    <string name="message_welcome_page_2">Click login to get started!</string>
+    <string name="isError">There is an error</string>
 </resources>
