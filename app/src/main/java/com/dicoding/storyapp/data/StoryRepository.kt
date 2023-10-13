@@ -3,12 +3,15 @@ package com.dicoding.storyapp.data
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.dicoding.storyapp.data.response.ErrorResponse
 import com.dicoding.storyapp.data.response.LoginResponse
 import com.dicoding.storyapp.data.response.RegisterResponse
 import com.dicoding.storyapp.data.retrofit.ApiService
 import com.dicoding.storyapp.utils.Event
+import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
+import retrofit2.HttpException
 import retrofit2.Response
 
 class StoryRepository private constructor(
@@ -36,16 +39,26 @@ class StoryRepository private constructor(
                 response: Response<RegisterResponse>
             ) {
                 _isLoading.value = false
-                if (response.isSuccessful && response.body() != null){
-                    _registerResponse.value = response.body()
-                    _toastText.value = Event(response.body()?.message.toString())
-                } else {
-                    _toastText.value = Event(response.message().toString())
+                try {
+                    if (response.body() != null){
+                        _registerResponse.value = response.body()
+                        _toastText.value = Event(response.body()?.message.toString())
+                    } else {
+                        val jsonInString = response.errorBody()?.string()
+                        val errorBody = Gson().fromJson(jsonInString, ErrorResponse::class.java)
+                        _toastText.value = Event(errorBody.message ?: response.message().toString())
+                    }
+                } catch (e: HttpException){
+                    val jsonInString = e.response()?.errorBody()?.string()
+                    val errorBody = Gson().fromJson(jsonInString, ErrorResponse::class.java)
+                    _toastText.value = Event(errorBody.message ?: response.message().toString())
+
                     Log.e(TAG, "onFailure: ${response.message()}, ${response.body()?.message.toString()}")
                 }
             }
 
             override fun onFailure(call: Call<RegisterResponse>, t: Throwable) {
+                _isLoading.value = false
                 _toastText.value = Event(t.message.toString())
                 Log.e(TAG, "onFailure: ${t.message.toString()}")
             }
@@ -59,16 +72,26 @@ class StoryRepository private constructor(
         client.enqueue(object : Callback<LoginResponse> {
             override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
                 _isLoading.value = false
-                if (response.isSuccessful && response.body() != null){
-                    _loginResponse.value = response.body()
-                    _toastText.value = Event(response.body()?.message.toString())
-                } else {
-                    _toastText.value = Event(response.message().toString())
+                try {
+                    if (response.body() != null){
+                        _loginResponse.value = response.body()
+                        _toastText.value = Event(response.body()?.message.toString())
+                    } else {
+                        val jsonInString = response.errorBody()?.string()
+                        val errorBody = Gson().fromJson(jsonInString, ErrorResponse::class.java)
+                        _toastText.value = Event(errorBody.message ?: response.message().toString())
+                    }
+                } catch (e: HttpException){
+                    val jsonInString = e.response()?.errorBody()?.string()
+                    val errorBody = Gson().fromJson(jsonInString, ErrorResponse::class.java)
+                    _toastText.value = Event(errorBody.message ?: response.message().toString())
+
                     Log.e(TAG, "onFailure: ${response.message()}, ${response.body()?.message.toString()}")
                 }
             }
 
             override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
+                _isLoading.value = false
                 _toastText.value = Event(t.message.toString())
                 Log.e(TAG, "onFailure: ${t.message.toString()}")
             }
