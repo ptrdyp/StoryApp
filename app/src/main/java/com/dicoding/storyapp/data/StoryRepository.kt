@@ -3,6 +3,7 @@ package com.dicoding.storyapp.data
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.dicoding.storyapp.data.response.LoginResponse
 import com.dicoding.storyapp.data.response.RegisterResponse
 import com.dicoding.storyapp.data.retrofit.ApiService
 import com.dicoding.storyapp.utils.Event
@@ -15,6 +16,9 @@ class StoryRepository private constructor(
 ){
     private val _registerResponse = MutableLiveData<RegisterResponse>()
     val registerResponse: LiveData<RegisterResponse> = _registerResponse
+
+    private val _loginResponse = MutableLiveData<LoginResponse>()
+    val loginResponse: LiveData<LoginResponse> = _loginResponse
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
@@ -45,7 +49,29 @@ class StoryRepository private constructor(
                 _toastText.value = Event(t.message.toString())
                 Log.e(TAG, "onFailure: ${t.message.toString()}")
             }
+        })
+    }
 
+    fun postLogin(email: String, password: String) {
+        _isLoading.value = true
+        val client = apiService.login(email, password)
+
+        client.enqueue(object : Callback<LoginResponse> {
+            override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
+                _isLoading.value = false
+                if (response.isSuccessful && response.body() != null){
+                    _loginResponse.value = response.body()
+                    _toastText.value = Event(response.body()?.message.toString())
+                } else {
+                    _toastText.value = Event(response.message().toString())
+                    Log.e(TAG, "onFailure: ${response.message()}, ${response.body()?.message.toString()}")
+                }
+            }
+
+            override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
+                _toastText.value = Event(t.message.toString())
+                Log.e(TAG, "onFailure: ${t.message.toString()}")
+            }
         })
     }
 

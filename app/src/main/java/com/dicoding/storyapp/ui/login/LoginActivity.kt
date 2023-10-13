@@ -10,18 +10,28 @@ import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
 import android.widget.TextView
+import android.widget.Toast
+import androidx.activity.viewModels
 import com.dicoding.storyapp.R
 import com.dicoding.storyapp.databinding.ActivityLoginBinding
+import com.dicoding.storyapp.ui.ViewModelFactory
 import com.dicoding.storyapp.ui.register.RegisterActivity
+import com.dicoding.storyapp.ui.story.MainActivity
 
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
+    private lateinit var viewModelFactory: ViewModelFactory
+    private val loginViewModel by viewModels<LoginViewModel> {
+        ViewModelFactory.getInstance()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        viewModelFactory = ViewModelFactory.getInstance()
 
         setupView()
         setupAction()
@@ -41,12 +51,52 @@ class LoginActivity : AppCompatActivity() {
         supportActionBar?.hide()
     }
 
+    private fun postText() {
+        binding.apply {
+            loginViewModel.postLogin(
+                edLoginEmail.text.toString(),
+                edLoginPassword.text.toString()
+            )
+        }
+    }
+
     private fun setupAction() {
+        binding.apply {
+            loginButton.setOnClickListener {
+                when {
+                    edLoginEmail.length() == 0 -> {
+                        edLoginEmail.error = getString(R.string.required_field)
+                    }
+                    edLoginPassword.length() == 0 -> {
+                        edLoginPassword.error = getString(R.string.required_field)
+                    }
+                    else -> {
+                        edLoginEmail.error = null
+                        edLoginPassword.error = null
+
+                        showLoading()
+                        postText()
+                        showToast()
+                        moveActivity()
+                    }
+                }
+            }
+        }
+
         val tvToRegister = findViewById<TextView>(R.id.tv_toRegister)
 
         tvToRegister.setOnClickListener{
             val intent = Intent(this, RegisterActivity::class.java)
             startActivity(intent)
+        }
+    }
+
+    private fun moveActivity(){
+        loginViewModel.loginResponse.observe(this) { response ->
+            if (!response.error){
+                startActivity(Intent(this, MainActivity::class.java))
+                finish()
+            }
         }
     }
 
@@ -95,4 +145,19 @@ class LoginActivity : AppCompatActivity() {
 
     }
 
+    private fun showLoading() {
+        loginViewModel.isLoading.observe(this) {
+            binding.progressBar.visibility = if (it) View.VISIBLE else View.GONE
+        }
+    }
+
+    private fun showToast() {
+        loginViewModel.toastText.observe(this){
+            it.getContentIfNotHandled()?.let { toastText ->
+                Toast.makeText(
+                    this, toastText, Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
 }

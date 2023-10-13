@@ -20,7 +20,7 @@ import com.dicoding.storyapp.ui.login.LoginActivity
 class RegisterActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityRegisterBinding
-    private lateinit var factory: ViewModelFactory
+    private lateinit var viewModelFactory: ViewModelFactory
     private val registerViewModel by viewModels<RegisterViewModel> {
         ViewModelFactory.getInstance()
     }
@@ -30,7 +30,7 @@ class RegisterActivity : AppCompatActivity() {
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        factory = ViewModelFactory.getInstance()
+        viewModelFactory = ViewModelFactory.getInstance()
 
         setupView()
         setupAction()
@@ -48,6 +48,16 @@ class RegisterActivity : AppCompatActivity() {
             )
         }
         supportActionBar?.hide()
+    }
+
+    private fun postText(){
+        binding.apply {
+            registerViewModel.postRegister(
+                edRegisterName.text.toString(),
+                edRegisterEmail.text.toString(),
+                edRegisterPassword.text.toString()
+            )
+        }
     }
 
     private fun setupAction(){
@@ -82,16 +92,6 @@ class RegisterActivity : AppCompatActivity() {
         tvToLogin.setOnClickListener{
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
-        }
-    }
-
-    private fun postText(){
-        binding.apply {
-            registerViewModel.postRegister(
-                edRegisterName.text.toString(),
-                edRegisterEmail.text.toString(),
-                edRegisterPassword.text.toString()
-            )
         }
     }
 
