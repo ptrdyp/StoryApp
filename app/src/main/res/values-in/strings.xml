@@ -21,4 +21,8 @@
     <string name="message_welcome_page">Platform untuk berbagi segala cerita Anda hari ini. Kami mengundang Anda untuk menjelajahi berbagai kisah inspiratif yang kami miliki, atau lebih jauh lagi, berbagi cerita Anda sendiri. </string>
     <string name="message_welcome_page_2">Klik Masuk untuk memulai!</string>
     <string name="isError">Terjadi kesalahan</string>
+    <string name="tv_cloud">Awan</string>
+    <string name="hedgehog_look_at_sunflower">Landak menatap bunga matahari</string>
+    <string name="hedgehog_hugs_sunflowers">Landak memeluk bunga matahari</string>
+    <string name="logout">Keluar</string>
 </resources>

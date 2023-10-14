@@ -13,6 +13,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
 import com.dicoding.storyapp.R
+import com.dicoding.storyapp.data.UserModel
 import com.dicoding.storyapp.databinding.ActivityLoginBinding
 import com.dicoding.storyapp.ui.ViewModelFactory
 import com.dicoding.storyapp.ui.register.RegisterActivity
@@ -23,7 +24,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
     private lateinit var viewModelFactory: ViewModelFactory
     private val loginViewModel by viewModels<LoginViewModel> {
-        ViewModelFactory.getInstance()
+        ViewModelFactory.getInstance(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,7 +32,7 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        viewModelFactory = ViewModelFactory.getInstance()
+        viewModelFactory = ViewModelFactory.getInstance(this)
 
         setupView()
         setupAction()
@@ -51,11 +52,25 @@ class LoginActivity : AppCompatActivity() {
         supportActionBar?.hide()
     }
 
+    private fun saveUser(userModel: UserModel) {
+        loginViewModel.saveUser(userModel)
+    }
+
     private fun postText() {
         binding.apply {
             loginViewModel.postLogin(
                 edLoginEmail.text.toString(),
                 edLoginPassword.text.toString()
+            )
+        }
+
+        loginViewModel.loginResponse.observe(this) {
+            saveUser(
+                UserModel(
+                    it.loginResult?.name.toString(),
+                    AUTH_KEY + (it.loginResult?.token.toString()),
+                    true
+                )
             )
         }
     }
@@ -77,6 +92,7 @@ class LoginActivity : AppCompatActivity() {
                         showLoading()
                         postText()
                         showToast()
+                        loginViewModel.login()
                         moveActivity()
                     }
                 }
@@ -92,8 +108,8 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun moveActivity(){
-        loginViewModel.loginResponse.observe(this) { response ->
-            if (!response.error){
+        loginViewModel.loginResponse.observe(this) {
+            if (!it.error){
                 startActivity(Intent(this, MainActivity::class.java))
                 finish()
             }
@@ -159,5 +175,9 @@ class LoginActivity : AppCompatActivity() {
                 ).show()
             }
         }
+    }
+
+    companion object {
+        private const val AUTH_KEY = "Bearer"
     }
 }

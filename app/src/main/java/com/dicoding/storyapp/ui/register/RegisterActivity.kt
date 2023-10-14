@@ -22,7 +22,7 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRegisterBinding
     private lateinit var viewModelFactory: ViewModelFactory
     private val registerViewModel by viewModels<RegisterViewModel> {
-        ViewModelFactory.getInstance()
+        ViewModelFactory.getInstance(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,7 +30,7 @@ class RegisterActivity : AppCompatActivity() {
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        viewModelFactory = ViewModelFactory.getInstance()
+        viewModelFactory = ViewModelFactory.getInstance(this)
 
         setupView()
         setupAction()
@@ -96,8 +96,8 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun moveActivity(){
-        registerViewModel.registerResponse.observe(this){ response ->
-            if (!response.error){
+        registerViewModel.registerResponse.observe(this){
+            if (!it.error){
                 startActivity(Intent(this, LoginActivity::class.java))
                 finish()
             }

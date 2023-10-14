@@ -1,0 +1,65 @@
+package com.dicoding.storyapp.data.di
+
+import android.content.Context
+import android.util.Log
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.preferencesDataStore
+import com.dicoding.storyapp.data.UserModel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "token")
+class UserPreference private constructor(private val dataStore: DataStore<Preferences>){
+
+    suspend fun login(){
+        dataStore.edit { preferences ->
+            preferences[STATE_KEY] = true
+        }
+    }
+    fun getUser(): Flow<UserModel> {
+        return dataStore.data.map {
+            val name = it[NAME_KEY] ?: ""
+            val token = it[TOKEN_KEY] ?: ""
+            val isLogin = it[STATE_KEY] ?: false
+
+            Log.d("UserPreference", "Name: $name, Token: $token, IsLogin: $isLogin")
+
+            UserModel(name, token, isLogin)
+        }
+    }
+
+    suspend fun saveUser(userModel: UserModel) {
+        dataStore.edit { preferences ->
+            preferences[NAME_KEY] = userModel.name
+            preferences[TOKEN_KEY] = userModel.token
+            preferences[STATE_KEY] = userModel.isLogin
+        }
+    }
+
+    suspend fun logout(){
+        dataStore.edit { preferences ->
+            preferences.clear()
+        }
+    }
+
+    companion object {
+        @Volatile
+        private var INSTANCE: UserPreference? = null
+
+        private val NAME_KEY = stringPreferencesKey("name")
+        private val TOKEN_KEY = stringPreferencesKey("token")
+        private val STATE_KEY = booleanPreferencesKey("state")
+
+        fun getInstance(dataStore: DataStore<Preferences>): UserPreference {
+            return INSTANCE ?: synchronized(this){
+                val instance = UserPreference(dataStore)
+                INSTANCE = instance
+                instance
+            }
+        }
+    }
+}

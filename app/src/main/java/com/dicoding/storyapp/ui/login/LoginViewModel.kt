@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dicoding.storyapp.data.StoryRepository
+import com.dicoding.storyapp.data.UserModel
 import com.dicoding.storyapp.data.response.LoginResponse
 import com.dicoding.storyapp.utils.Event
 import kotlinx.coroutines.launch
@@ -16,6 +17,18 @@ class LoginViewModel(private val repository: StoryRepository) : ViewModel() {
     fun postLogin(email: String, password: String){
         viewModelScope.launch {
             repository.postLogin(email, password)
+        }
+    }
+
+    fun saveUser(userModel: UserModel){
+        viewModelScope.launch {
+            repository.saveUser(userModel)
+        }
+    }
+
+    fun login() {
+        viewModelScope.launch {
+            repository.login()
         }
     }
 }

@@ -3,9 +3,13 @@ package com.dicoding.storyapp.data
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.asLiveData
+import com.dicoding.storyapp.data.di.UserPreference
 import com.dicoding.storyapp.data.response.ErrorResponse
+import com.dicoding.storyapp.data.response.ListStoryItem
 import com.dicoding.storyapp.data.response.LoginResponse
 import com.dicoding.storyapp.data.response.RegisterResponse
+import com.dicoding.storyapp.data.response.StoryResponse
 import com.dicoding.storyapp.data.retrofit.ApiService
 import com.dicoding.storyapp.utils.Event
 import com.google.gson.Gson
@@ -15,13 +19,20 @@ import retrofit2.HttpException
 import retrofit2.Response
 
 class StoryRepository private constructor(
-    private val apiService: ApiService
+    private val apiService: ApiService,
+    private val pref: UserPreference
 ){
     private val _registerResponse = MutableLiveData<RegisterResponse>()
     val registerResponse: LiveData<RegisterResponse> = _registerResponse
 
     private val _loginResponse = MutableLiveData<LoginResponse>()
     val loginResponse: LiveData<LoginResponse> = _loginResponse
+
+    private val _list = MutableLiveData<StoryResponse>()
+    val list: LiveData<StoryResponse> = _list
+
+    private val _listStoryItem = MutableLiveData<List<ListStoryItem>>()
+    val listStoryItem: LiveData<List<ListStoryItem>> = _listStoryItem
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
@@ -98,14 +109,32 @@ class StoryRepository private constructor(
         })
     }
 
+    suspend fun login(){
+        pref.login()
+    }
+
+    fun getUser(): LiveData<UserModel>{
+        return pref.getUser().asLiveData()
+    }
+
+    suspend fun saveUser(userModel: UserModel) {
+        pref.saveUser(userModel)
+    }
+
+    suspend fun logout() {
+        pref.logout()
+        Log.d(TAG, "Berhasil Logout")
+    }
+
     companion object {
         private const val TAG = "StoryRepository"
 
         @Volatile
         private var instance: StoryRepository? = null
 
-        fun getInstance(apiService: ApiService) = instance ?: synchronized(this) {
-            instance ?: StoryRepository(apiService)
+        fun getInstance(apiService: ApiService, pref: UserPreference) =
+            instance ?: synchronized(this) {
+                instance ?: StoryRepository(apiService, pref)
         }.also {
             instance = it
         }

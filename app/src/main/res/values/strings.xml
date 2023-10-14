@@ -20,4 +20,8 @@
     <string name="message_welcome_page">Platform to share all your stories today. We invite you to explore the inspiring stories we have, or go even further, share your own.</string>
     <string name="message_welcome_page_2">Click login to get started!</string>
     <string name="isError">There is an error</string>
+    <string name="tv_cloud">Cloud</string>
+    <string name="hedgehog_look_at_sunflower">Hedgehog look at Sunflower</string>
+    <string name="hedgehog_hugs_sunflowers">Hedgehog hugs sunflowers</string>
+    <string name="logout">Logout</string>
 </resources>
