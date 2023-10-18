@@ -15,11 +15,14 @@ import kotlinx.coroutines.flow.map
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "token")
 class UserPreference private constructor(private val dataStore: DataStore<Preferences>){
 
-    suspend fun login(){
+    suspend fun saveUser(userModel: UserModel) {
         dataStore.edit { preferences ->
-            preferences[STATE_KEY] = true
+            preferences[NAME_KEY] = userModel.name
+            preferences[TOKEN_KEY] = userModel.token
+            preferences[STATE_KEY] = userModel.isLogin
         }
     }
+
     fun getUser(): Flow<UserModel> {
         return dataStore.data.map {
             val name = it[NAME_KEY] ?: ""
@@ -29,14 +32,6 @@ class UserPreference private constructor(private val dataStore: DataStore<Prefer
             Log.d("UserPreference", "Name: $name, Token: $token, IsLogin: $isLogin")
 
             UserModel(name, token, isLogin)
-        }
-    }
-
-    suspend fun saveUser(userModel: UserModel) {
-        dataStore.edit { preferences ->
-            preferences[NAME_KEY] = userModel.name
-            preferences[TOKEN_KEY] = userModel.token
-            preferences[STATE_KEY] = userModel.isLogin
         }
     }
 

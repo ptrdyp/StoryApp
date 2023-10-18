@@ -16,7 +16,7 @@ class MainViewModel(private val repository: StoryRepository) : ViewModel() {
     val isLoading: LiveData<Boolean> = repository.isLoading
     val toastText: LiveData<Event<String>> = repository.toastText
 
-    fun getSession(): LiveData<UserModel> {
+    fun getUser(): LiveData<UserModel> {
         return repository.getUser()
     }
     fun logout() {

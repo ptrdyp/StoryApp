@@ -66,7 +66,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupUser() {
         showLoading()
-        mainViewModel.getSession().observe(this) {
+        mainViewModel.getUser().observe(this) {
             token = it.token
             if (token != "") {
                 setupData()

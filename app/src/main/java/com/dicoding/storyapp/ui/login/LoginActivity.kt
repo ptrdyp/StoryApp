@@ -52,29 +52,6 @@ class LoginActivity : AppCompatActivity() {
         supportActionBar?.hide()
     }
 
-    private fun saveUser(userModel: UserModel) {
-        loginViewModel.saveUser(userModel)
-    }
-
-    private fun postText() {
-        binding.apply {
-            loginViewModel.postLogin(
-                edLoginEmail.text.toString(),
-                edLoginPassword.text.toString()
-            )
-        }
-
-        loginViewModel.loginResponse.observe(this) {
-            saveUser(
-                UserModel(
-                    it.loginResult?.name.toString(),
-                    it.loginResult?.token.toString(),
-                    true
-                )
-            )
-        }
-    }
-
     private fun setupAction() {
         binding.apply {
             loginButton.setOnClickListener {
@@ -92,27 +69,63 @@ class LoginActivity : AppCompatActivity() {
                         showLoading()
                         postText()
                         showToast()
-                        loginViewModel.login()
                         moveActivity()
                     }
                 }
             }
         }
 
+        moveToRegister()
+    }
+
+    private fun postText() {
+        binding.apply {
+            loginViewModel.postLogin(
+                edLoginEmail.text.toString(),
+                edLoginPassword.text.toString()
+            )
+        }
+
+        loginViewModel.loginResponse.observe(this) {
+            if (it != null) {
+                if (!it.error){
+                    if (it != null) {
+                        saveUser(
+                            UserModel(
+                                it.loginResult?.name ?: "",
+                                it.loginResult?.token ?: "",
+                                it.loginResult != null
+                            )
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+
+
+    private fun saveUser(userModel: UserModel) {
+        loginViewModel.saveUser(userModel)
+    }
+
+    private fun moveActivity(){
+        loginViewModel.loginResponse.observe(this) {
+            if (it != null) {
+                if (!it.error){
+                    startActivity(Intent(this, MainActivity::class.java))
+                    finish()
+                }
+            }
+        }
+    }
+
+    private fun moveToRegister(){
         val tvToRegister = findViewById<TextView>(R.id.tv_toRegister)
 
         tvToRegister.setOnClickListener{
             val intent = Intent(this, RegisterActivity::class.java)
             startActivity(intent)
-        }
-    }
-
-    private fun moveActivity(){
-        loginViewModel.loginResponse.observe(this) {
-            if (!it.error){
-                startActivity(Intent(this, MainActivity::class.java))
-                finish()
-            }
         }
     }
 

@@ -25,8 +25,8 @@ class StoryRepository private constructor(
     private val _registerResponse = MutableLiveData<RegisterResponse>()
     val registerResponse: LiveData<RegisterResponse> = _registerResponse
 
-    private val _loginResponse = MutableLiveData<LoginResponse>()
-    val loginResponse: LiveData<LoginResponse> = _loginResponse
+    private val _loginResponse = MutableLiveData<LoginResponse?>()
+    val loginResponse: MutableLiveData<LoginResponse?> = _loginResponse
 
     private val _list = MutableLiveData<StoryResponse>()
     val list: LiveData<StoryResponse> = _list
@@ -109,21 +109,17 @@ class StoryRepository private constructor(
         })
     }
 
-    suspend fun login(){
-        pref.login()
+    suspend fun saveUser(userModel: UserModel) {
+        pref.saveUser(userModel)
     }
 
     fun getUser(): LiveData<UserModel>{
         return pref.getUser().asLiveData()
     }
 
-    suspend fun saveUser(userModel: UserModel) {
-        pref.saveUser(userModel)
-    }
-
     suspend fun logout() {
         pref.logout()
-        Log.d(TAG, "Berhasil Logout")
+        _loginResponse.value = null
     }
 
     companion object {
