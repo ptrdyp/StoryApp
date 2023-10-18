@@ -89,21 +89,17 @@ class LoginActivity : AppCompatActivity() {
         loginViewModel.loginResponse.observe(this) {
             if (it != null) {
                 if (!it.error){
-                    if (it != null) {
-                        saveUser(
-                            UserModel(
-                                it.loginResult?.name ?: "",
-                                it.loginResult?.token ?: "",
-                                it.loginResult != null
-                            )
+                    saveUser(
+                        UserModel(
+                            it.loginResult?.name ?: "",
+                            it.loginResult?.token ?: "",
+                            it.loginResult != null
                         )
-                    }
+                    )
                 }
             }
         }
     }
-
-
 
     private fun saveUser(userModel: UserModel) {
         loginViewModel.saveUser(userModel)
