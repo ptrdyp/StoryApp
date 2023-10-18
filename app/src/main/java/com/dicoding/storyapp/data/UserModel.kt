@@ -1,7 +1,7 @@
 package com.dicoding.storyapp.data
 
 data class UserModel (
-    var name: String,
-    var token: String,
+    val name: String,
+    val token: String,
     val isLogin: Boolean
 )
