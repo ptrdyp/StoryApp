@@ -10,8 +10,7 @@ object Injection {
     fun provideRepository(context: Context): StoryRepository {
         val pref = UserPreference.getInstance(context.dataStore)
         val user = runBlocking { pref.getUser().first() }
-        val token = user.token
-        val apiService = ApiConfig.getApiService(token)
+        val apiService = ApiConfig.getApiService(user.token)
         return StoryRepository.getInstance(apiService, pref)
     }
 }

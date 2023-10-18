@@ -68,7 +68,7 @@ class LoginActivity : AppCompatActivity() {
             saveUser(
                 UserModel(
                     it.loginResult?.name.toString(),
-                    AUTH_KEY + (it.loginResult?.token.toString()),
+                    it.loginResult?.token.toString(),
                     true
                 )
             )
@@ -177,7 +177,4 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    companion object {
-        private const val AUTH_KEY = "Bearer"
-    }
 }

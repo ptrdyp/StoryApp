@@ -135,8 +135,8 @@ class StoryRepository private constructor(
         fun getInstance(apiService: ApiService, pref: UserPreference) =
             instance ?: synchronized(this) {
                 instance ?: StoryRepository(apiService, pref)
-        }.also {
-            instance = it
-        }
+            }.also {
+                instance = it
+            }
     }
 }

@@ -68,7 +68,7 @@ class MainActivity : AppCompatActivity() {
         showLoading()
         mainViewModel.getSession().observe(this) {
             token = it.token
-            if (it.isLogin) {
+            if (token != "") {
                 setupData()
             } else {
                 moveToWelcomeActivity()
