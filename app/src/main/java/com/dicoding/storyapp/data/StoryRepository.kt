@@ -10,9 +10,12 @@ import com.dicoding.storyapp.data.response.ListStoryItem
 import com.dicoding.storyapp.data.response.LoginResponse
 import com.dicoding.storyapp.data.response.RegisterResponse
 import com.dicoding.storyapp.data.response.StoryResponse
+import com.dicoding.storyapp.data.retrofit.ApiConfig
 import com.dicoding.storyapp.data.retrofit.ApiService
 import com.dicoding.storyapp.utils.Event
 import com.google.gson.Gson
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.first
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.HttpException
@@ -28,11 +31,11 @@ class StoryRepository private constructor(
     private val _loginResponse = MutableLiveData<LoginResponse?>()
     val loginResponse: MutableLiveData<LoginResponse?> = _loginResponse
 
-    private val _list = MutableLiveData<StoryResponse>()
-    val list: LiveData<StoryResponse> = _list
+    private val _listStory = MutableLiveData<StoryResponse>()
+    val listStory: LiveData<StoryResponse> = _listStory
 
-    private val _listStoryItem = MutableLiveData<List<ListStoryItem>>()
-    val listStoryItem: LiveData<List<ListStoryItem>> = _listStoryItem
+    private val _storyItem = MutableLiveData<List<ListStoryItem>>()
+    val storyItem: LiveData<List<ListStoryItem>> = _storyItem
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
@@ -107,6 +110,34 @@ class StoryRepository private constructor(
                 Log.e(TAG, "onFailure: ${t.message.toString()}")
             }
         })
+    }
+
+    suspend fun getApiServiceWithToken(): ApiService? {
+        val user = pref.getUser().first()
+        return if (user.isLogin) {
+            ApiConfig.getApiService(user.token)
+        } else {
+            null
+        }
+    }
+
+    suspend fun getStories(apiService: ApiService){
+        _isLoading.value = true
+        try {
+            val response = apiService.getStories()
+            if (response.isSuccessful) {
+                _listStory.value = response.body()
+            } else {
+                val jsonInString = response.errorBody()?.string()
+                val errorBody = Gson().fromJson(jsonInString, ErrorResponse::class.java)
+                _toastText.value = Event(errorBody.message ?: response.message().toString())
+            }
+        } catch (e: Exception) {
+            _toastText.value = Event(e.message ?: "An error occured")
+            Log.e(TAG, "getStories: ${e.message}", e)
+        } finally {
+            _isLoading.value = false
+        }
     }
 
     suspend fun saveUser(userModel: UserModel) {

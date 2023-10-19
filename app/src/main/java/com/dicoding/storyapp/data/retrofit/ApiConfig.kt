@@ -1,5 +1,6 @@
 package com.dicoding.storyapp.data.retrofit
 
+import android.util.Log
 import com.dicoding.storyapp.BuildConfig
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -17,6 +18,8 @@ class ApiConfig {
                 val requestHeaders = req.newBuilder()
                     .addHeader("Authorization", "Bearer $token")
                     .build()
+
+                Log.d("ApiConfig", "Token sent in request: $token")
                 chain.proceed(requestHeaders)
             }
             val client = OkHttpClient.Builder()

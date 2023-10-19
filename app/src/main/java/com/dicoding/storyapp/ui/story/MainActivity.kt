@@ -3,6 +3,7 @@ package com.dicoding.storyapp.ui.story
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -39,21 +40,6 @@ class MainActivity : AppCompatActivity() {
         setupUser()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.option_menu, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId){
-            R.id.logoutButton -> {
-                mainViewModel.logout()
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
-
     private fun setupAdapter(){
         adapter = StoryAdapter()
         val layoutManager = LinearLayoutManager(this)
@@ -67,19 +53,30 @@ class MainActivity : AppCompatActivity() {
     private fun setupUser() {
         showLoading()
         mainViewModel.getUser().observe(this) {
+            Log.d("MainActivity", "User isLogin: ${it.isLogin}")
             token = it.token
-            if (token != "") {
+            if (it.isLogin) {
+                Log.d("TokenDebug", "Stored Token: $token")
+                Log.d("TokenDebug", "Sending request to get stories with token: $token")
                 setupData()
             } else {
                 moveToWelcomeActivity()
             }
         }
+        showToast()
     }
 
     private fun setupData(){
         mainViewModel.listStoryItem.observe(this) {
-            if (it.isNotEmpty()) {
+            if (it != null && it.isNotEmpty()) {
                 adapter.setList(it)
+            } else {
+                showToast()
+            }
+        }
+        mainViewModel.getApiServiceWithToken().observe(this) {  apiService ->
+            if (apiService != null) {
+                mainViewModel.getStories(apiService)
             } else {
                 showToast()
             }
@@ -89,6 +86,21 @@ class MainActivity : AppCompatActivity() {
     private fun moveToWelcomeActivity() {
         startActivity(Intent(this, WelcomeActivity::class.java))
         finish()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.option_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId){
+            R.id.logoutButton -> {
+                mainViewModel.logout()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     private fun showLoading() {

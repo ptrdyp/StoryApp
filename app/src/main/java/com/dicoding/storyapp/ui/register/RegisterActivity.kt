@@ -50,16 +50,6 @@ class RegisterActivity : AppCompatActivity() {
         supportActionBar?.hide()
     }
 
-    private fun postText(){
-        binding.apply {
-            registerViewModel.postRegister(
-                edRegisterName.text.toString(),
-                edRegisterEmail.text.toString(),
-                edRegisterPassword.text.toString()
-            )
-        }
-    }
-
     private fun setupAction(){
         binding.apply {
             registerButton.setOnClickListener {
@@ -87,11 +77,16 @@ class RegisterActivity : AppCompatActivity() {
             }
         }
 
-        val tvToLogin = findViewById<TextView>(R.id.tv_toLogin)
+        moveToLogin()
+    }
 
-        tvToLogin.setOnClickListener{
-            val intent = Intent(this, LoginActivity::class.java)
-            startActivity(intent)
+    private fun postText(){
+        binding.apply {
+            registerViewModel.postRegister(
+                edRegisterName.text.toString(),
+                edRegisterEmail.text.toString(),
+                edRegisterPassword.text.toString()
+            )
         }
     }
 
@@ -101,6 +96,15 @@ class RegisterActivity : AppCompatActivity() {
                 startActivity(Intent(this, LoginActivity::class.java))
                 finish()
             }
+        }
+    }
+
+    private fun moveToLogin(){
+        val tvToLogin = findViewById<TextView>(R.id.tv_toLogin)
+
+        tvToLogin.setOnClickListener{
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
         }
     }
 
