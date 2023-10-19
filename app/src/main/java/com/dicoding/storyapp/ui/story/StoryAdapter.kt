@@ -1,10 +1,14 @@
 package com.dicoding.storyapp.ui.story
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.dicoding.storyapp.R
 import com.dicoding.storyapp.data.response.ListStoryItem
 import com.dicoding.storyapp.databinding.ItemStoryBinding
 
@@ -14,7 +18,7 @@ class StoryAdapter : RecyclerView.Adapter<StoryAdapter.MyViewHolder>() {
     private var onItemClickCallback: OnItemClickCallBack? = null
 
     interface OnItemClickCallBack{
-        fun onItemClicked(data: ListStoryItem)
+        fun onItemClicked(data: ListStoryItem, binding: ItemStoryBinding)
     }
 
     fun setOnItemClickCallback(onItemClickCallback: OnItemClickCallBack) {
@@ -31,8 +35,8 @@ class StoryAdapter : RecyclerView.Adapter<StoryAdapter.MyViewHolder>() {
                 tvItemName.text = story.name
                 tvItemDescription.text = story.description
 
-                itemView.setOnClickListener{
-                    onItemClickCallback?.onItemClicked(story)
+                root.setOnClickListener{
+                    onItemClickCallback?.onItemClicked(story, binding)
                 }
             }
         }

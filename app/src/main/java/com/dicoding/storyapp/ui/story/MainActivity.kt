@@ -9,10 +9,13 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.core.app.ActivityOptionsCompat
+import androidx.core.util.Pair
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dicoding.storyapp.R
 import com.dicoding.storyapp.data.response.ListStoryItem
 import com.dicoding.storyapp.databinding.ActivityMainBinding
+import com.dicoding.storyapp.databinding.ItemStoryBinding
 import com.dicoding.storyapp.ui.ViewModelFactory
 import com.dicoding.storyapp.ui.detail.DetailActivity
 import com.dicoding.storyapp.ui.welcome.WelcomeActivity
@@ -52,11 +55,18 @@ class MainActivity : AppCompatActivity() {
         }
 
         adapter.setOnItemClickCallback(object : StoryAdapter.OnItemClickCallBack {
-            override fun onItemClicked(data: ListStoryItem) {
-                Intent(this@MainActivity, DetailActivity::class.java).also {
-                    it.putExtra(DetailActivity.EXTRA_ID, data.id)
-                    startActivity(it)
-                }
+            override fun onItemClicked(data: ListStoryItem, binding: ItemStoryBinding) {
+                val intent = Intent(this@MainActivity, DetailActivity::class.java)
+                intent.putExtra(DetailActivity.EXTRA_ID, data.id)
+
+                val optionsCompat: ActivityOptionsCompat =
+                    ActivityOptionsCompat.makeSceneTransitionAnimation(
+                        this@MainActivity,
+                        Pair(binding.ivItemPhoto, "photo"),
+                        Pair(binding.tvItemName, "name"),
+                        Pair(binding.tvItemDescription, "description"),
+                    )
+                startActivity(intent, optionsCompat.toBundle())
             }
         })
     }
