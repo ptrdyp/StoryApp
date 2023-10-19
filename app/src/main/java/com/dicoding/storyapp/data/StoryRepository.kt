@@ -127,6 +127,7 @@ class StoryRepository private constructor(
             val response = apiService.getStories()
             if (response.isSuccessful) {
                 _listStory.value = response.body()
+                _storyItem.value = response.body()?.listStory ?: emptyList()
             } else {
                 val jsonInString = response.errorBody()?.string()
                 val errorBody = Gson().fromJson(jsonInString, ErrorResponse::class.java)
