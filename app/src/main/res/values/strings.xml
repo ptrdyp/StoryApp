@@ -24,4 +24,5 @@
     <string name="hedgehog_look_at_sunflower">Hedgehog look at Sunflower</string>
     <string name="hedgehog_hugs_sunflowers">Hedgehog hugs sunflowers</string>
     <string name="logout">Logout</string>
+    <string name="detail_story">Detail Story</string>
 </resources>

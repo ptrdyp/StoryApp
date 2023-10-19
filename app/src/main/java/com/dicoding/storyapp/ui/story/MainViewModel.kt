@@ -7,14 +7,12 @@ import androidx.lifecycle.viewModelScope
 import com.dicoding.storyapp.data.StoryRepository
 import com.dicoding.storyapp.data.UserModel
 import com.dicoding.storyapp.data.response.ListStoryItem
-import com.dicoding.storyapp.data.response.StoryResponse
 import com.dicoding.storyapp.data.retrofit.ApiService
 import com.dicoding.storyapp.utils.Event
 import kotlinx.coroutines.launch
 
 class MainViewModel(private val repository: StoryRepository) : ViewModel() {
-    val listStory: LiveData<StoryResponse> = repository.listStory
-    val listStoryItem: LiveData<List<ListStoryItem>> = repository.storyItem
+    val listStoryItem: LiveData<List<ListStoryItem>> = repository.listStory
     val isLoading: LiveData<Boolean> = repository.isLoading
     val toastText: LiveData<Event<String>> = repository.toastText
 

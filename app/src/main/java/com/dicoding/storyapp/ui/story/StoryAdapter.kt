@@ -11,17 +11,29 @@ import com.dicoding.storyapp.databinding.ItemStoryBinding
 class StoryAdapter : RecyclerView.Adapter<StoryAdapter.MyViewHolder>() {
 
     private val listStory = ArrayList<ListStoryItem>()
+    private var onItemClickCallback: OnItemClickCallBack? = null
+
+    interface OnItemClickCallBack{
+        fun onItemClicked(data: ListStoryItem)
+    }
+
+    fun setOnItemClickCallback(onItemClickCallback: OnItemClickCallBack) {
+        this.onItemClickCallback = onItemClickCallback
+    }
 
     inner class MyViewHolder(private val binding: ItemStoryBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(story: ListStoryItem){
             binding.apply {
                 Glide.with(ivItemPhoto.context)
                     .load(story.photoUrl)
+                    .fitCenter()
                     .into(ivItemPhoto)
-                tvItemNama.text = story.name
-                tvItemDeskripsi.text = story.description
+                tvItemName.text = story.name
+                tvItemDescription.text = story.description
 
-                // setOnClick disini
+                itemView.setOnClickListener{
+                    onItemClickCallback?.onItemClicked(story)
+                }
             }
         }
     }

@@ -11,8 +11,10 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dicoding.storyapp.R
+import com.dicoding.storyapp.data.response.ListStoryItem
 import com.dicoding.storyapp.databinding.ActivityMainBinding
 import com.dicoding.storyapp.ui.ViewModelFactory
+import com.dicoding.storyapp.ui.detail.DetailActivity
 import com.dicoding.storyapp.ui.welcome.WelcomeActivity
 
 class MainActivity : AppCompatActivity() {
@@ -48,6 +50,15 @@ class MainActivity : AppCompatActivity() {
             rvStory.setHasFixedSize(true)
             rvStory.adapter = adapter
         }
+
+        adapter.setOnItemClickCallback(object : StoryAdapter.OnItemClickCallBack {
+            override fun onItemClicked(data: ListStoryItem) {
+                Intent(this@MainActivity, DetailActivity::class.java).also {
+                    it.putExtra(DetailActivity.EXTRA_ID, data.id)
+                    startActivity(it)
+                }
+            }
+        })
     }
 
     private fun setupUser() {

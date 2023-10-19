@@ -123,7 +123,7 @@ class RegisterActivity : AppCompatActivity() {
         val passTv = ObjectAnimator.ofFloat(binding.passwordTextView, View.ALPHA, 1f).setDuration(1000)
         val passEt = ObjectAnimator.ofFloat(binding.passwordEditTextLayout, View.ALPHA, 1f).setDuration(1000)
         val button = ObjectAnimator.ofFloat(binding.registerButton, View.ALPHA, 1f).setDuration(1000)
-        val tvAsk = ObjectAnimator.ofFloat(binding.tvAsktoLogin, View.ALPHA, 1f).setDuration(1000)
+        val tvAsk = ObjectAnimator.ofFloat(binding.tvAskToLogin, View.ALPHA, 1f).setDuration(1000)
         val toLogin = ObjectAnimator.ofFloat(binding.tvToLogin, View.ALPHA, 1f).setDuration(1000)
 
         val nameTogether = AnimatorSet().apply {

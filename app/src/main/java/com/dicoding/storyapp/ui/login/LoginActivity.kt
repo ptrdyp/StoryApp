@@ -6,7 +6,6 @@ import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
@@ -149,7 +148,7 @@ class LoginActivity : AppCompatActivity() {
         val passTv = ObjectAnimator.ofFloat(binding.passwordTextView, View.ALPHA, 1f).setDuration(1000)
         val passEt = ObjectAnimator.ofFloat(binding.passwordEditTextLayout, View.ALPHA, 1f).setDuration(1000)
         val button = ObjectAnimator.ofFloat(binding.loginButton, View.ALPHA, 1f).setDuration(1000)
-        val tvAsk = ObjectAnimator.ofFloat(binding.tvAsktoRegister, View.ALPHA, 1f).setDuration(1000)
+        val tvAsk = ObjectAnimator.ofFloat(binding.tvAskToRegister, View.ALPHA, 1f).setDuration(1000)
         val toRegister = ObjectAnimator.ofFloat(binding.tvToRegister, View.ALPHA, 1f).setDuration(1000)
 
         val emailTogether = AnimatorSet().apply {

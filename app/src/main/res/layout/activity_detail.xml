@@ -16,10 +16,10 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/tv_detail_nama"/>
+        app:layout_constraintBottom_toTopOf="@id/tv_detail_name"/>
 
     <TextView
-        android:id="@+id/tv_detail_nama"
+        android:id="@+id/tv_detail_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -34,7 +34,7 @@
         tools:text="Nama User" />
 
     <TextView
-        android:id="@+id/tv_detail_deskripsi"
+        android:id="@+id/tv_detail_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -46,8 +46,20 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_detail_nama"
+        app:layout_constraintTop_toBottomOf="@id/tv_detail_name"
         app:layout_constraintVertical_bias="0.0"
         tools:text="Deskripsi maks 2 baris aksjgdieuagskdbxieasgbm sadghaesyo asdghcxmb asjkdhzbx asidukzxbn ausdjkbx kaejhsdnb " />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

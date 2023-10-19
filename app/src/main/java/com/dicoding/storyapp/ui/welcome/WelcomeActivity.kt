@@ -11,7 +11,6 @@ import android.view.WindowInsets
 import android.view.WindowManager
 import com.dicoding.storyapp.databinding.ActivityWelcomeBinding
 import com.dicoding.storyapp.ui.login.LoginActivity
-import java.time.Duration
 
 class WelcomeActivity : AppCompatActivity() {
 
