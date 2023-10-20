@@ -132,24 +132,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onBackPressed() {
-        super.onBackPressed()
-        finishAffinity()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        showLoading()
-        mainViewModel.getUser().observe(this) {
-            token = it.token
-            if (it.isLogin) {
-                setupData()
-            } else {
-                moveToWelcomeActivity()
-            }
-        }
-    }
-
     private fun showLoading() {
         mainViewModel.isLoading.observe(this) {
             binding.progressBar.visibility = if (it) View.VISIBLE else View.GONE
@@ -164,5 +146,10 @@ class MainActivity : AppCompatActivity() {
                 ).show()
             }
         }
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finishAffinity()
     }
 }

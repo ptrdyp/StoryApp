@@ -70,4 +70,9 @@ class WelcomeActivity : AppCompatActivity() {
             start()
         }
     }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finishAffinity()
+    }
 }
