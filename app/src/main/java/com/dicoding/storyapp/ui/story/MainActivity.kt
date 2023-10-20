@@ -19,6 +19,7 @@ import com.dicoding.storyapp.databinding.ItemStoryBinding
 import com.dicoding.storyapp.ui.add.AddStoryActivity
 import com.dicoding.storyapp.utils.ViewModelFactory
 import com.dicoding.storyapp.ui.detail.DetailActivity
+import com.dicoding.storyapp.ui.profile.ProfileActivity
 import com.dicoding.storyapp.ui.welcome.WelcomeActivity
 
 class MainActivity : AppCompatActivity() {
@@ -117,6 +118,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun moveToProfileActivity() {
+        startActivity(Intent(this, ProfileActivity::class.java))
+    }
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.option_menu, menu)
         return super.onCreateOptionsMenu(menu)
@@ -124,6 +129,10 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId){
+            R.id.profileButton -> {
+                moveToProfileActivity()
+                true
+            }
             R.id.logoutButton -> {
                 mainViewModel.logout()
                 true
