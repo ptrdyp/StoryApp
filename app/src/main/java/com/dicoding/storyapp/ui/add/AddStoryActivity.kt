@@ -39,7 +39,18 @@ class  AddStoryActivity : AppCompatActivity() {
             title = getString(R.string.add_story)
         }
 
+        if (savedInstanceState != null) {
+            currentImageUri = addStoryViewModel.currentImageUri
+            binding.descriptionEditText.setText(addStoryViewModel.description)
+            showImage()
+            showLoading()
+        }
         setupButton()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        addStoryViewModel.saveInstanceState(currentImageUri, binding.descriptionEditText.text.toString())
     }
 
     private fun setupButton() {
@@ -61,7 +72,7 @@ class  AddStoryActivity : AppCompatActivity() {
     private val launcherGallery = registerForActivityResult(
         ActivityResultContracts.PickVisualMedia()
     ) {
-        uri: Uri? ->
+            uri: Uri? ->
         if (uri != null) {
             currentImageUri = uri
             showToast()

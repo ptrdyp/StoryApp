@@ -1,5 +1,6 @@
 package com.dicoding.storyapp.ui.add
 
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,6 +13,9 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 
 class AddStoryViewModel(private val repository: StoryRepository) : ViewModel() {
+    var currentImageUri: Uri? = null
+    var description: String = ""
+
     val addStoryResponse: LiveData<AddStoryResponse> = repository.addStory
     val isLoading: LiveData<Boolean> = repository.isLoading
     val toastText: LiveData<Event<String>> = repository.toastText
@@ -24,5 +28,10 @@ class AddStoryViewModel(private val repository: StoryRepository) : ViewModel() {
 
     fun getUser(): LiveData<UserModel> {
         return repository.getUser()
+    }
+
+    fun saveInstanceState(imageUri: Uri?, description: String) {
+        currentImageUri = imageUri
+        this.description = description
     }
 }
