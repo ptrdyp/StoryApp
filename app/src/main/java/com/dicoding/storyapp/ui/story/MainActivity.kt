@@ -3,6 +3,7 @@ package com.dicoding.storyapp.ui.story
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -122,6 +123,10 @@ class MainActivity : AppCompatActivity() {
         startActivity(Intent(this, ProfileActivity::class.java))
     }
 
+    private fun setupSetting() {
+        startActivity(Intent(Settings.ACTION_LOCALE_SETTINGS))
+    }
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.option_menu, menu)
         return super.onCreateOptionsMenu(menu)
@@ -131,6 +136,10 @@ class MainActivity : AppCompatActivity() {
         return when (item.itemId){
             R.id.profileButton -> {
                 moveToProfileActivity()
+                true
+            }
+            R.id.settingLanguage -> {
+                setupSetting()
                 true
             }
             R.id.logoutButton -> {
