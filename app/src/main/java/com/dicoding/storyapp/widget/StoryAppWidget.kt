@@ -10,7 +10,6 @@ import android.widget.RemoteViews
 import android.widget.Toast
 import androidx.core.net.toUri
 import com.dicoding.storyapp.R
-import com.dicoding.storyapp.ui.detail.DetailActivity
 import com.dicoding.storyapp.ui.story.MainActivity
 
 /**

@@ -16,6 +16,7 @@ import com.dicoding.storyapp.R
 import com.dicoding.storyapp.databinding.ActivityRegisterBinding
 import com.dicoding.storyapp.utils.ViewModelFactory
 import com.dicoding.storyapp.ui.login.LoginActivity
+import com.dicoding.storyapp.ui.welcome.WelcomeActivity
 
 class RegisterActivity : AppCompatActivity() {
 
@@ -108,6 +109,10 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
+    private fun moveToWelcome() {
+        startActivity(Intent(this, WelcomeActivity::class.java))
+    }
+
     private fun playAnimation(){
         ObjectAnimator.ofFloat(binding.imageView, View.TRANSLATION_X, -30f, 30f).apply {
             duration = 6000
@@ -162,5 +167,11 @@ class RegisterActivity : AppCompatActivity() {
                 ).show()
             }
         }
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onBackPressed() {
+        finishAffinity()
+        moveToWelcome()
     }
 }

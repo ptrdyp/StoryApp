@@ -166,8 +166,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
-        super.onBackPressed()
         finishAffinity()
+        super.onBackPressed()
     }
 }

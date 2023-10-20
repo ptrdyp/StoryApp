@@ -5,19 +5,15 @@ import android.graphics.Bitmap
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.dicoding.storyapp.R
 import com.dicoding.storyapp.data.di.UserPreference
 import com.dicoding.storyapp.data.response.ErrorResponse
 import com.dicoding.storyapp.data.response.ListStoryItem
-import com.dicoding.storyapp.data.retrofit.ApiConfig
 import com.dicoding.storyapp.data.retrofit.ApiService
 import com.dicoding.storyapp.utils.Event
 import com.dicoding.storyapp.widget.ImageLoader
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
-import javax.security.auth.callback.Callback
 
 class StoryWidgetRepository private constructor(
     private val apiService: ApiService,

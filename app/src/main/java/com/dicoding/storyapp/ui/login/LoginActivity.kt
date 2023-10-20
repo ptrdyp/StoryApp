@@ -18,6 +18,7 @@ import com.dicoding.storyapp.databinding.ActivityLoginBinding
 import com.dicoding.storyapp.utils.ViewModelFactory
 import com.dicoding.storyapp.ui.register.RegisterActivity
 import com.dicoding.storyapp.ui.story.MainActivity
+import com.dicoding.storyapp.ui.welcome.WelcomeActivity
 
 class LoginActivity : AppCompatActivity() {
 
@@ -125,6 +126,10 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    private fun moveToWelcome() {
+        startActivity(Intent(this, WelcomeActivity::class.java))
+    }
+
     private fun playAnimation(){
         fun View.createTranslationXAnimator(
             fromX: Float,
@@ -184,6 +189,12 @@ class LoginActivity : AppCompatActivity() {
                 ).show()
             }
         }
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onBackPressed() {
+        finishAffinity()
+        moveToWelcome()
     }
 
 }
