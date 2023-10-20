@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId = "com.dicoding.storyapp"
-        minSdk = 21
+        minSdk = 29
         targetSdk = 33
         versionCode = 1
         versionName = "1.0"
@@ -70,6 +70,9 @@ dependencies {
 
     // Data Store
     implementation("androidx.datastore:datastore-preferences:1.0.0")
+
+    // EXIF
+    implementation("androidx.exifinterface:exifinterface:1.3.6")
 
     // Testing
     testImplementation("junit:junit:4.13.2")

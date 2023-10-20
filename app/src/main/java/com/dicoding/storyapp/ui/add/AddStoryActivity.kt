@@ -19,17 +19,13 @@ import com.dicoding.storyapp.utils.reduceFileImage
 import com.dicoding.storyapp.utils.uriToFile
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
-import java.io.File
 
 class  AddStoryActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAddStoryBinding
     private var currentImageUri: Uri? = null
-    private var getFile: File? = null
-    private lateinit var viewModelFactory: ViewModelFactory
     private val addStoryViewModel by viewModels<AddStoryViewModel> {
         ViewModelFactory.getInstance(this)
     }
