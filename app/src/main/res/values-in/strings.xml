@@ -33,4 +33,8 @@
     <string name="image_selected">Gambar dipilih!</string>
     <string name="no_media_selected">Tidak ada media yang dipilih!</string>
     <string name="description_text">Masukkan deskripsi disini…</string>
+    <string name="appwidget_text">BANER STORY APP</string>
+    <string name="add_widget">Tambah widget</string>
+    <string name="app_widget_description">Ini adalah deskripsi dari app widget</string>
+    <string name="empty_text">TIDAK ADA DATA</string>
 </resources>

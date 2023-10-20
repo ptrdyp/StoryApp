@@ -10,6 +10,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.dicoding.storyapp.data.UserModel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "token")
@@ -33,6 +34,12 @@ class UserPreference private constructor(private val dataStore: DataStore<Prefer
 
             UserModel(name, token, isLogin)
         }
+    }
+
+    suspend fun getToken(): String {
+        return dataStore.data.map {
+            it[TOKEN_KEY] ?: ""
+        }.first()
     }
 
     suspend fun logout(){
