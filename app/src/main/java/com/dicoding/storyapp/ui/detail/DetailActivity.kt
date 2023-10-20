@@ -3,13 +3,11 @@ package com.dicoding.storyapp.ui.detail
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import com.bumptech.glide.Glide
-import com.dicoding.storyapp.R
 import com.dicoding.storyapp.databinding.ActivityDetailBinding
-import com.dicoding.storyapp.ui.ViewModelFactory
+import com.dicoding.storyapp.utils.ViewModelFactory
 
 class DetailActivity : AppCompatActivity() {
 

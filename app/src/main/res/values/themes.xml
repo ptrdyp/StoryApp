@@ -4,10 +4,11 @@
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
 
-        <item name="android:statusBarColor">@color/brown</item>
-        <item name="colorPrimary">@color/light_brown</item>
-        <item name="colorPrimaryVariant">@color/brown</item>
+        <item name="android:statusBarColor">@color/light_brown</item>
+        <item name="colorPrimary">@color/brown</item>
+        <item name="colorPrimaryVariant">@color/light_brown</item>
         <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondaryVariant">@color/light_brown</item>
         <item name="colorSecondary">@color/brown</item>
         <item name="colorOnSecondary">@color/white</item>
     </style>

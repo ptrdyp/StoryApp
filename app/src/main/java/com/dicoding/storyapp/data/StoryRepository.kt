@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asLiveData
 import com.dicoding.storyapp.data.di.UserPreference
+import com.dicoding.storyapp.data.response.AddStoryResponse
 import com.dicoding.storyapp.data.response.DetailStoryResponse
 import com.dicoding.storyapp.data.response.ErrorResponse
 import com.dicoding.storyapp.data.response.ListStoryItem
@@ -16,6 +17,8 @@ import com.dicoding.storyapp.data.retrofit.ApiService
 import com.dicoding.storyapp.utils.Event
 import com.google.gson.Gson
 import kotlinx.coroutines.flow.first
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.HttpException
@@ -36,6 +39,9 @@ class StoryRepository private constructor(
 
     private val _storyItem = MutableLiveData<DetailStoryResponse>()
     val storyItem: MutableLiveData<DetailStoryResponse> = _storyItem
+
+    private val _addStory = MutableLiveData<AddStoryResponse>()
+    val addStory: LiveData<AddStoryResponse> = _addStory
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
@@ -105,6 +111,39 @@ class StoryRepository private constructor(
             }
 
             override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
+                _isLoading.value = false
+                _toastText.value = Event(t.message.toString())
+                Log.e(TAG, "onFailure: ${t.message.toString()}")
+            }
+        })
+    }
+
+    fun postStory(file: MultipartBody.Part, description: RequestBody) {
+        _isLoading.value = true
+        val client = apiService.uploadStory(file, description)
+
+        client.enqueue(object : Callback<AddStoryResponse> {
+            override fun onResponse(call: Call<AddStoryResponse>, response: Response<AddStoryResponse>) {
+                _isLoading.value = false
+                try {
+                    if (response.isSuccessful){
+                        _addStory.value = response.body()
+                        _toastText.value = Event(response.body()?.message.toString())
+                    } else {
+                        val jsonInString = response.errorBody()?.string()
+                        val errorBody = Gson().fromJson(jsonInString, ErrorResponse::class.java)
+                        _toastText.value = Event(errorBody.message ?: response.message().toString())
+                    }
+                } catch (e: HttpException){
+                    val jsonInString = e.response()?.errorBody()?.string()
+                    val errorBody = Gson().fromJson(jsonInString, ErrorResponse::class.java)
+                    _toastText.value = Event(errorBody.message ?: response.message().toString())
+
+                    Log.e(TAG, "onFailure: ${response.message()}, ${response.body()?.message.toString()}")
+                }
+            }
+
+            override fun onFailure(call: Call<AddStoryResponse>, t: Throwable) {
                 _isLoading.value = false
                 _toastText.value = Event(t.message.toString())
                 Log.e(TAG, "onFailure: ${t.message.toString()}")

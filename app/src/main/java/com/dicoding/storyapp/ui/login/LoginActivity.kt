@@ -15,7 +15,7 @@ import androidx.activity.viewModels
 import com.dicoding.storyapp.R
 import com.dicoding.storyapp.data.UserModel
 import com.dicoding.storyapp.databinding.ActivityLoginBinding
-import com.dicoding.storyapp.ui.ViewModelFactory
+import com.dicoding.storyapp.utils.ViewModelFactory
 import com.dicoding.storyapp.ui.register.RegisterActivity
 import com.dicoding.storyapp.ui.story.MainActivity
 

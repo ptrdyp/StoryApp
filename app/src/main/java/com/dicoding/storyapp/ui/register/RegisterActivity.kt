@@ -14,7 +14,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import com.dicoding.storyapp.R
 import com.dicoding.storyapp.databinding.ActivityRegisterBinding
-import com.dicoding.storyapp.ui.ViewModelFactory
+import com.dicoding.storyapp.utils.ViewModelFactory
 import com.dicoding.storyapp.ui.login.LoginActivity
 
 class RegisterActivity : AppCompatActivity() {

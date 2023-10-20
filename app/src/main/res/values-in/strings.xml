@@ -25,4 +25,12 @@
     <string name="hedgehog_look_at_sunflower">Landak menatap bunga matahari</string>
     <string name="hedgehog_hugs_sunflowers">Landak memeluk bunga matahari</string>
     <string name="logout">Keluar</string>
+    <string name="detail_story">Detail Story</string>
+    <string name="add_story">Tambah Story</string>
+    <string name="camera">Kamera</string>
+    <string name="gallery">Galeri</string>
+    <string name="upload">Unggah</string>
+    <string name="image_selected">Gambar dipilih!</string>
+    <string name="no_media_selected">Tidak ada media yang dipilih!</string>
+    <string name="description_text">Masukkan deskripsi disini…</string>
 </resources>

@@ -24,5 +24,12 @@
     <string name="hedgehog_look_at_sunflower">Hedgehog look at Sunflower</string>
     <string name="hedgehog_hugs_sunflowers">Hedgehog hugs sunflowers</string>
     <string name="logout">Logout</string>
-    <string name="detail_story">Detail Story</string>
+    <string name="detail_story">Story Details</string>
+    <string name="add_story">Add Story</string>
+    <string name="camera">Camera</string>
+    <string name="gallery">Gallery</string>
+    <string name="upload">Upload</string>
+    <string name="image_selected">Image selected!</string>
+    <string name="no_media_selected">No media selected!</string>
+    <string name="description_text">Enter the description here…</string>
 </resources>

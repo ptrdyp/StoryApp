@@ -1,11 +1,11 @@
-package com.dicoding.storyapp.ui
+package com.dicoding.storyapp.utils
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.dicoding.storyapp.data.StoryRepository
 import com.dicoding.storyapp.data.di.Injection
-import com.dicoding.storyapp.ui.detail.DetailActivity
+import com.dicoding.storyapp.ui.add.AddStoryViewModel
 import com.dicoding.storyapp.ui.detail.DetailViewModel
 import com.dicoding.storyapp.ui.login.LoginViewModel
 import com.dicoding.storyapp.ui.register.RegisterViewModel
@@ -26,6 +26,9 @@ class ViewModelFactory(private val repository: StoryRepository) :ViewModelProvid
             }
             modelClass.isAssignableFrom(DetailViewModel::class.java) -> {
                 DetailViewModel(repository) as T
+            }
+            modelClass.isAssignableFrom(AddStoryViewModel::class.java) -> {
+                AddStoryViewModel(repository) as T
             }
             else -> throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
         }

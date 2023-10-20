@@ -16,7 +16,8 @@ import com.dicoding.storyapp.R
 import com.dicoding.storyapp.data.response.ListStoryItem
 import com.dicoding.storyapp.databinding.ActivityMainBinding
 import com.dicoding.storyapp.databinding.ItemStoryBinding
-import com.dicoding.storyapp.ui.ViewModelFactory
+import com.dicoding.storyapp.ui.add.AddStoryActivity
+import com.dicoding.storyapp.utils.ViewModelFactory
 import com.dicoding.storyapp.ui.detail.DetailActivity
 import com.dicoding.storyapp.ui.welcome.WelcomeActivity
 
@@ -42,6 +43,7 @@ class MainActivity : AppCompatActivity() {
         ViewModelFactory.getInstance(this)
 
         setupAdapter()
+        moveToAddStoryActivity()
         setupUser()
     }
 
@@ -109,6 +111,12 @@ class MainActivity : AppCompatActivity() {
         finish()
     }
 
+    private fun moveToAddStoryActivity() {
+        binding.fabAdd.setOnClickListener {
+            startActivity(Intent(this, AddStoryActivity::class.java))
+        }
+    }
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.option_menu, menu)
         return super.onCreateOptionsMenu(menu)
@@ -121,6 +129,24 @@ class MainActivity : AppCompatActivity() {
                 true
             }
             else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finishAffinity()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        showLoading()
+        mainViewModel.getUser().observe(this) {
+            token = it.token
+            if (it.isLogin) {
+                setupData()
+            } else {
+                moveToWelcomeActivity()
+            }
         }
     }
 
