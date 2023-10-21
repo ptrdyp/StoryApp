@@ -5,7 +5,7 @@
     android:initialLayout="@layout/story_app_widget"
     android:minWidth="250dp"
     android:minHeight="110dp"
-    android:previewImage="@drawable/example_appwidget_preview"
+    android:previewImage="@drawable/story_logo"
 
     android:previewLayout="@layout/story_app_widget"
     android:targetCellWidth="4"

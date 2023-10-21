@@ -42,7 +42,6 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
         android:text="@string/login_title"
-        android:textColor="@color/black"
         android:textSize="20sp"
         android:textStyle="bold"
         android:alpha="0"
@@ -58,7 +57,6 @@
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
         android:text="@string/login_message"
-        android:textColor="@color/black"
         android:textSize="16sp"
         android:alpha="0"
         app:layout_constraintEnd_toEndOf="parent"
@@ -74,7 +72,6 @@
         android:layout_marginTop="24dp"
         android:text="@string/email"
         android:alpha="0"
-        android:textColor="@color/black"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/messageTextView" />
 
@@ -108,7 +105,6 @@
         android:layout_marginTop="8dp"
         android:text="@string/password"
         android:alpha="0"
-        android:textColor="@color/black"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/emailEditTextLayout" />
 
@@ -156,7 +152,6 @@
         android:layout_height="wrap_content"
         android:text="@string/asktoregister"
         android:alpha="0"
-        android:textColor="@color/black"
         android:layout_marginTop="20dp"
         app:layout_constraintEnd_toEndOf="@id/loginButton"
         app:layout_constraintHorizontal_bias="0.35"
@@ -171,7 +166,6 @@
         android:layout_marginTop="20dp"
         android:alpha="0"
         android:text="@string/register"
-        android:textColor="@color/black"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@id/tv_askToRegister"
         app:layout_constraintTop_toBottomOf="@id/loginButton" />

@@ -11,6 +11,8 @@
         <item name="colorSecondaryVariant">@color/light_brown</item>
         <item name="colorSecondary">@color/brown</item>
         <item name="colorOnSecondary">@color/white</item>
+
+        <item name="floatingActionButtonStyle">@color/light_beige</item>
     </style>
 
     <style name="Theme.StoryApp" parent="Base.Theme.StoryApp" />
