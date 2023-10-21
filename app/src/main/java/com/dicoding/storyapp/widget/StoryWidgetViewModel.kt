@@ -25,7 +25,6 @@ class StoryWidgetViewModel(
                         callback(it)
                     }
                 } catch (e: Exception) {
-                    Log.e("StackRemoteViewsFactory", "Error loading data: ${e.message}", e)
                     e.printStackTrace()
                 }
             }

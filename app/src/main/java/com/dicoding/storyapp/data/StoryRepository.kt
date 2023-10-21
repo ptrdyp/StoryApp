@@ -152,7 +152,7 @@ class StoryRepository private constructor(
 
     suspend fun getApiServiceWithToken(): ApiService? {
         val user = pref.getUser().first()
-        return if (user.isLogin) {
+        return if (user.isLogin && user.token.isNotEmpty()) {
             ApiConfig.getApiService(user.token)
         } else {
             null

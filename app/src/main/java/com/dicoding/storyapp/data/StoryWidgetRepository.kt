@@ -40,7 +40,6 @@ class StoryWidgetRepository private constructor(
                 for (storyItem in listStoryItem) {
                     imageLoader.loadImage(storyItem.photoUrl) { bitmap ->
                         if (bitmap != null) {
-                            Log.d(TAG, "Bitmap loaded successfully for story item: $storyItem")
                             widgetItems.add(storyItem)
                             bitmapList.add(bitmap)
 
@@ -52,7 +51,6 @@ class StoryWidgetRepository private constructor(
                 }
             } catch (e: Exception) {
                 _toastText.value = Event(e.message ?: "An error occured")
-                Log.e(TAG, "getStories: ${e.message}", e)
             } finally {
                 _isLoading.value = false
             }
@@ -73,7 +71,6 @@ class StoryWidgetRepository private constructor(
     }
 
     companion object {
-        private const val TAG = "StoryWidgetRepository"
 
         fun create(
             apiService: ApiService,

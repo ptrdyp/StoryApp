@@ -44,9 +44,9 @@ class MainActivity : AppCompatActivity() {
 
         ViewModelFactory.getInstance(this)
 
+        setupUser()
         setupAdapter()
         moveToAddStoryActivity()
-        setupUser()
     }
 
     private fun setupAdapter(){
@@ -82,7 +82,6 @@ class MainActivity : AppCompatActivity() {
             token = it.token
             if (it.isLogin) {
                 Log.d("TokenDebug", "Stored Token: $token")
-                Log.d("TokenDebug", "Sending request to get stories with token: $token")
                 setupData()
             } else {
                 moveToWelcomeActivity()
