@@ -2,11 +2,14 @@ package com.dicoding.storyapp.ui.add
 
 import android.net.Uri
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.dicoding.storyapp.data.StoryRepository
 import com.dicoding.storyapp.data.UserModel
 import com.dicoding.storyapp.data.response.AddStoryResponse
+import com.dicoding.storyapp.data.retrofit.ApiService
 import com.dicoding.storyapp.utils.Event
 import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
@@ -20,9 +23,15 @@ class AddStoryViewModel(private val repository: StoryRepository) : ViewModel() {
     val isLoading: LiveData<Boolean> = repository.isLoading
     val toastText: LiveData<Event<String>> = repository.toastText
 
-    fun postStory(file: MultipartBody.Part, description: RequestBody) {
+    fun getApiServiceWithToken(): LiveData<ApiService?> {
+        return liveData {
+            emit(repository.getApiServiceWithToken())
+        }
+    }
+
+    fun postStory(apiService: ApiService, file: MultipartBody.Part, description: RequestBody) {
         viewModelScope.launch {
-            repository.postStory(file, description)
+            repository.postStory(apiService, file, description)
         }
     }
 

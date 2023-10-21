@@ -117,37 +117,27 @@ class StoryRepository private constructor(
         })
     }
 
-    fun postStory(file: MultipartBody.Part, description: RequestBody) {
+    suspend fun postStory(apiService: ApiService, file: MultipartBody.Part, description: RequestBody) {
         _isLoading.value = true
-        val client = apiService.uploadStory(file, description)
-
-        client.enqueue(object : Callback<AddStoryResponse> {
-            override fun onResponse(call: Call<AddStoryResponse>, response: Response<AddStoryResponse>) {
-                _isLoading.value = false
-                try {
-                    if (response.isSuccessful){
-                        _addStory.value = response.body()
-                        _toastText.value = Event(response.body()?.message.toString())
-                    } else {
-                        val jsonInString = response.errorBody()?.string()
-                        val errorBody = Gson().fromJson(jsonInString, ErrorResponse::class.java)
-                        _toastText.value = Event(errorBody.message ?: response.message().toString())
-                    }
-                } catch (e: HttpException){
-                    val jsonInString = e.response()?.errorBody()?.string()
+        try {
+            val apiServiceWithToken = getApiServiceWithToken()
+            if (apiServiceWithToken != null) {
+                val response = apiService.uploadStory(file, description)
+                if (response.isSuccessful) {
+                    _addStory.value = response.body()
+                    _toastText.value = Event(response.body()?.message.toString())
+                } else {
+                    val jsonInString = response.errorBody()?.string()
                     val errorBody = Gson().fromJson(jsonInString, ErrorResponse::class.java)
                     _toastText.value = Event(errorBody.message ?: response.message().toString())
-
-                    Log.e(TAG, "onFailure: ${response.message()}, ${response.body()?.message.toString()}")
                 }
             }
-
-            override fun onFailure(call: Call<AddStoryResponse>, t: Throwable) {
-                _isLoading.value = false
-                _toastText.value = Event(t.message.toString())
-                Log.e(TAG, "onFailure: ${t.message.toString()}")
-            }
-        })
+        } catch (e: HttpException){
+            _toastText.value = Event(e.message ?: "An error occured")
+            Log.e(TAG, "getStories: ${e.message}", e)
+        } finally {
+            _isLoading.value = false
+        }
     }
 
     suspend fun getApiServiceWithToken(): ApiService? {
@@ -162,13 +152,16 @@ class StoryRepository private constructor(
     suspend fun getStories(apiService: ApiService){
         _isLoading.value = true
         try {
-            val response = apiService.getStories()
-            if (response.isSuccessful) {
-                _listStory.value = response.body()?.listStory ?: emptyList()
-            } else {
-                val jsonInString = response.errorBody()?.string()
-                val errorBody = Gson().fromJson(jsonInString, ErrorResponse::class.java)
-                _toastText.value = Event(errorBody.message ?: response.message().toString())
+            val apiServiceWithToken = getApiServiceWithToken()
+            if (apiServiceWithToken != null) {
+                val response = apiService.getStories()
+                if (response.isSuccessful) {
+                    _listStory.value = response.body()?.listStory ?: emptyList()
+                } else {
+                    val jsonInString = response.errorBody()?.string()
+                    val errorBody = Gson().fromJson(jsonInString, ErrorResponse::class.java)
+                    _toastText.value = Event(errorBody.message ?: response.message().toString())
+                }
             }
         } catch (e: Exception) {
             _toastText.value = Event(e.message ?: "An error occured")
@@ -178,34 +171,26 @@ class StoryRepository private constructor(
         }
     }
 
-    fun getDetailStory(id: String = "") {
+    suspend fun getDetailStory(apiService: ApiService, id: String = "") {
         _isLoading.value = true
-        val client = apiService.getDetailStory(id)
-        client.enqueue(object : Callback<DetailStoryResponse> {
-            override fun onResponse(call: Call<DetailStoryResponse>, response: Response<DetailStoryResponse>) {
-                _isLoading.value = false
-                try {
-                    if (response.isSuccessful) {
-                        _storyItem.value = response.body()
-                        Log.d(TAG, "Detail story response: ${response.body()}")
-                    } else {
-                        val jsonInString = response.errorBody()?.string()
-                        val errorBody = Gson().fromJson(jsonInString, ErrorResponse::class.java)
-                        _toastText.value = Event(errorBody.message ?: response.message().toString())
-                    }
-                } catch (e: HttpException){
-                    Log.e(TAG, "HTTP Exception: ${e.code()}, ${e.message()}")
-                    val jsonInString = e.response()?.errorBody()?.string()
+        try {
+            val apiServiceWithToken = getApiServiceWithToken()
+            if (apiServiceWithToken != null) {
+                val response = apiService.getDetailStory(id)
+                if (response.isSuccessful) {
+                    _storyItem.value = response.body()
+                } else {
+                    val jsonInString = response.errorBody()?.string()
                     val errorBody = Gson().fromJson(jsonInString, ErrorResponse::class.java)
                     _toastText.value = Event(errorBody.message ?: response.message().toString())
                 }
             }
-            override fun onFailure(call: Call<DetailStoryResponse>, t: Throwable) {
-                _isLoading.value = false
-                _toastText.value = Event(t.message.toString())
-                Log.e(TAG, "onFailure: ${t.message.toString()}")
-            }
-        })
+        } catch (e: Exception) {
+            _toastText.value = Event(e.message ?: "An error occured")
+            Log.e(TAG, "getDetailStory: ${e.message}", e)
+        } finally {
+            _isLoading.value = false
+        }
     }
 
     suspend fun saveUser(userModel: UserModel) {

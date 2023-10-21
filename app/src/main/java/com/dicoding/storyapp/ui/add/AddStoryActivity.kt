@@ -121,7 +121,11 @@ class  AddStoryActivity : AppCompatActivity() {
 
     private fun postData(file: MultipartBody.Part, description: String) {
         val descriptionRequestBody = description.toRequestBody(MultipartBody.FORM)
-        addStoryViewModel.postStory(file, descriptionRequestBody)
+        addStoryViewModel.getApiServiceWithToken().observe(this) { apiService ->
+            if (apiService != null) {
+                addStoryViewModel.postStory(apiService, file, descriptionRequestBody)
+            }
+        }
         addStoryViewModel.addStoryResponse.observe(this) {
             if (!it.error) {
                 moveToMainActivity()

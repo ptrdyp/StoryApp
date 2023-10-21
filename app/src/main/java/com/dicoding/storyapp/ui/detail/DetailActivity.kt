@@ -29,7 +29,14 @@ class DetailActivity : AppCompatActivity() {
     private fun setupData() {
         val id = intent.getStringExtra(EXTRA_ID) ?: ""
 
-        detailViewModel.getStoryById(id)
+        detailViewModel.getApiServiceWithToken().observe(this) { apiService ->
+            if (apiService != null) {
+                detailViewModel.getStoryById(apiService, id)
+            } else {
+                showToast()
+            }
+        }
+
         detailViewModel.storyItem.observe(this) {
             Log.d("DetailActivity", "StoryItem observer called with value: $it")
             if (it != null) {

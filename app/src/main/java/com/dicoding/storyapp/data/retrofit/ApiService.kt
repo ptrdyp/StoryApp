@@ -37,14 +37,14 @@ interface ApiService {
     suspend fun getStories(): Response<StoryResponse>
 
     @GET("stories/{id}")
-    fun getDetailStory(
+    suspend fun getDetailStory(
         @Path("id") id: String
-    ): Call<DetailStoryResponse>
+    ): Response<DetailStoryResponse>
 
     @Multipart
     @POST("stories")
-    fun uploadStory(
+    suspend fun uploadStory(
         @Part file: MultipartBody.Part,
         @Part("description") description: RequestBody,
-    ): Call<AddStoryResponse>
+    ): Response<AddStoryResponse>
 }
