@@ -44,8 +44,8 @@ class MainActivity : AppCompatActivity() {
 
         ViewModelFactory.getInstance(this)
 
-        setupUser()
         setupAdapter()
+        setupUser()
         moveToAddStoryActivity()
     }
 
@@ -91,16 +91,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupData(){
-        mainViewModel.listStoryItem.observe(this) {
-            if (it != null && it.isNotEmpty()) {
-                adapter.setList(it)
+        mainViewModel.getApiServiceWithToken().observe(this) {  apiService ->
+            if (apiService != null) {
+                mainViewModel.getStories(apiService)
             } else {
                 showToast()
             }
         }
-        mainViewModel.getApiServiceWithToken().observe(this) {  apiService ->
-            if (apiService != null) {
-                mainViewModel.getStories(apiService)
+        mainViewModel.listStoryItem.observe(this) {
+            if (it != null && it.isNotEmpty()) {
+                adapter.setList(it)
             } else {
                 showToast()
             }
