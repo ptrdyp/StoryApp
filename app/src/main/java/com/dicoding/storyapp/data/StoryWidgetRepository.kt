@@ -57,7 +57,7 @@ class StoryWidgetRepository private constructor(
         }
     }
 
-    suspend fun getWidgetItems(): List<ListStoryItem> {
+    private suspend fun getWidgetItems(): List<ListStoryItem> {
         val response = apiService.getStories()
         if (response.isSuccessful) {
             response.body()?.listStory ?: emptyList()
