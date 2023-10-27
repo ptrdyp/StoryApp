@@ -20,6 +20,7 @@ import com.dicoding.storyapp.databinding.ItemStoryBinding
 import com.dicoding.storyapp.ui.add.AddStoryActivity
 import com.dicoding.storyapp.utils.ViewModelFactory
 import com.dicoding.storyapp.ui.detail.DetailActivity
+import com.dicoding.storyapp.ui.maps.MapsActivity
 import com.dicoding.storyapp.ui.profile.ProfileActivity
 import com.dicoding.storyapp.ui.welcome.WelcomeActivity
 
@@ -133,6 +134,10 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId){
+            R.id.mapsButton -> {
+                moveToMapsActivity()
+                true
+            }
             R.id.profileButton -> {
                 moveToProfileActivity()
                 true
@@ -147,6 +152,10 @@ class MainActivity : AppCompatActivity() {
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun moveToMapsActivity(){
+        startActivity(Intent(this, MapsActivity::class.java))
     }
 
     private fun showLoading() {

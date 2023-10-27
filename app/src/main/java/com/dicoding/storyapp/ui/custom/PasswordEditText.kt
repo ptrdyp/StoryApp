@@ -28,7 +28,7 @@ class PasswordEditText : TextInputEditText {
         init()
     }
 
-    override fun onDraw(canvas: Canvas?) {
+    override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         background = if (isError) backgroundError else backgroundDefault
         invalidate()

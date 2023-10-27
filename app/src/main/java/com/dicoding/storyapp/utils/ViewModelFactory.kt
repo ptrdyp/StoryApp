@@ -8,6 +8,7 @@ import com.dicoding.storyapp.data.di.Injection
 import com.dicoding.storyapp.ui.add.AddStoryViewModel
 import com.dicoding.storyapp.ui.detail.DetailViewModel
 import com.dicoding.storyapp.ui.login.LoginViewModel
+import com.dicoding.storyapp.ui.maps.MapsViewModel
 import com.dicoding.storyapp.ui.profile.ProfileViewModel
 import com.dicoding.storyapp.ui.register.RegisterViewModel
 import com.dicoding.storyapp.ui.story.MainViewModel
@@ -33,6 +34,9 @@ class ViewModelFactory(private val repository: StoryRepository) :ViewModelProvid
             }
             modelClass.isAssignableFrom(ProfileViewModel::class.java) -> {
                 ProfileViewModel(repository) as T
+            }
+            modelClass.isAssignableFrom(MapsViewModel::class.java) -> {
+                MapsViewModel(repository) as T
             }
             else -> throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
         }

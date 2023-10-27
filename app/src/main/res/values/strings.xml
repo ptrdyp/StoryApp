@@ -38,4 +38,6 @@
     <string name="empty_text">NO DATA</string>
     <string name="profile">Profile</string>
     <string name="setting">Setting</string>
+    <string name="title_activity_maps">MapsActivity</string>
+    <string name="maps">Maps</string>
 </resources>

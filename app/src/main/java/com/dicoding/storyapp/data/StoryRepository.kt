@@ -11,6 +11,7 @@ import com.dicoding.storyapp.data.response.ErrorResponse
 import com.dicoding.storyapp.data.response.ListStoryItem
 import com.dicoding.storyapp.data.response.LoginResponse
 import com.dicoding.storyapp.data.response.RegisterResponse
+import com.dicoding.storyapp.data.response.StoryResponse
 import com.dicoding.storyapp.data.retrofit.ApiConfig
 import com.dicoding.storyapp.data.retrofit.ApiService
 import com.dicoding.storyapp.utils.Event
@@ -32,6 +33,9 @@ class StoryRepository private constructor(
 
     private val _loginResponse = MutableLiveData<LoginResponse?>()
     val loginResponse: MutableLiveData<LoginResponse?> = _loginResponse
+
+    private val _storiesWithLocation = MutableLiveData<StoryResponse>()
+    val storiesWithLocation: MutableLiveData<StoryResponse> = _storiesWithLocation
 
     private val _listStory = MutableLiveData<List<ListStoryItem>>()
     val listStory: LiveData<List<ListStoryItem>> = _listStory
@@ -166,6 +170,28 @@ class StoryRepository private constructor(
         } catch (e: Exception) {
             _toastText.value = Event(e.message ?: "An error occured")
             Log.e(TAG, "getStories: ${e.message}", e)
+        } finally {
+            _isLoading.value = false
+        }
+    }
+
+    suspend fun getStoriesWithLocation(apiService: ApiService) {
+        _isLoading.value = true
+        try {
+            val apiServiceWithToken = getApiServiceWithToken()
+            if (apiServiceWithToken != null) {
+                val response = apiService.getStoriesWithLocation(1)
+                if (response.isSuccessful) {
+                    _storiesWithLocation.value = response.body()
+                } else {
+                    val jsonInString = response.errorBody()?.string()
+                    val errorBody = Gson().fromJson(jsonInString, ErrorResponse::class.java)
+                    _toastText.value = Event(errorBody.message ?: response.message().toString())
+                }
+            }
+        } catch (e: Exception) {
+            _toastText.value = Event(e.message ?: "An error occured")
+            Log.e(TAG, "getStoriesWithLocation: ${e.message}", e)
         } finally {
             _isLoading.value = false
         }
