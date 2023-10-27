@@ -27,8 +27,8 @@ class StoryRepository private constructor(
     private val apiService: ApiService,
     private val pref: UserPreference
 ){
-//    Sebaiknya live data diletakan pada kelas ViewModel saja ya,
-//    repository hanya berperan sebagai data layer (sumber data)
+    private val _registerResponse = MutableLiveData<RegisterResponse>()
+    val registerResponse: LiveData<RegisterResponse> = _registerResponse
 
     private val _loginResponse = MutableLiveData<LoginResponse?>()
     val loginResponse: MutableLiveData<LoginResponse?> = _loginResponse
@@ -48,6 +48,41 @@ class StoryRepository private constructor(
     private val _toastText = MutableLiveData<Event<String>>()
     val toastText: LiveData<Event<String>> = _toastText
 
+    fun postRegister(name: String, email: String, password: String) {
+        _isLoading.value = true
+        val client = apiService.register(name, email, password)
+
+        client.enqueue(object : Callback<RegisterResponse>{
+            override fun onResponse(
+                call: Call<RegisterResponse>,
+                response: Response<RegisterResponse>
+            ) {
+                _isLoading.value = false
+                try {
+                    if (response.body() != null){
+                        _registerResponse.value = response.body()
+                        _toastText.value = Event(response.body()?.message.toString())
+                    } else {
+                        val jsonInString = response.errorBody()?.string()
+                        val errorBody = Gson().fromJson(jsonInString, ErrorResponse::class.java)
+                        _toastText.value = Event(errorBody.message ?: response.message().toString())
+                    }
+                } catch (e: HttpException){
+                    val jsonInString = e.response()?.errorBody()?.string()
+                    val errorBody = Gson().fromJson(jsonInString, ErrorResponse::class.java)
+                    _toastText.value = Event(errorBody.message ?: response.message().toString())
+
+                    Log.e(TAG, "onFailure: ${response.message()}, ${response.body()?.message.toString()}")
+                }
+            }
+
+            override fun onFailure(call: Call<RegisterResponse>, t: Throwable) {
+                _isLoading.value = false
+                _toastText.value = Event(t.message.toString())
+                Log.e(TAG, "onFailure: ${t.message.toString()}")
+            }
+        })
+    }
 
     fun postLogin(email: String, password: String) {
         _isLoading.value = true

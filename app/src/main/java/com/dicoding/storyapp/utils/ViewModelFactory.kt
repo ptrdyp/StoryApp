@@ -5,8 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.dicoding.storyapp.data.StoryRepository
 import com.dicoding.storyapp.data.di.Injection
-import com.dicoding.storyapp.data.retrofit.ApiConfig
-import com.dicoding.storyapp.data.retrofit.ApiService
 import com.dicoding.storyapp.ui.add.AddStoryViewModel
 import com.dicoding.storyapp.ui.detail.DetailViewModel
 import com.dicoding.storyapp.ui.login.LoginViewModel
@@ -14,12 +12,12 @@ import com.dicoding.storyapp.ui.profile.ProfileViewModel
 import com.dicoding.storyapp.ui.register.RegisterViewModel
 import com.dicoding.storyapp.ui.story.MainViewModel
 
-class ViewModelFactory(private val repository: StoryRepository, private val apiService: ApiService) :ViewModelProvider.NewInstanceFactory() {
+class ViewModelFactory(private val repository: StoryRepository) :ViewModelProvider.NewInstanceFactory() {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return when {
             modelClass.isAssignableFrom(RegisterViewModel::class.java) -> {
-                RegisterViewModel(apiService) as T
+                RegisterViewModel(repository) as T
             }
             modelClass.isAssignableFrom(LoginViewModel::class.java) -> {
                 LoginViewModel(repository) as T
@@ -46,9 +44,7 @@ class ViewModelFactory(private val repository: StoryRepository, private val apiS
 
         @JvmStatic
         fun getInstance(context: Context) = instance ?: synchronized(this) {
-            val repository = Injection.provideRepository(context)
-            val apiService = ApiConfig.getApiService(token = "")
-            instance ?: ViewModelFactory(repository, apiService)
+            instance ?: ViewModelFactory(Injection.provideRepository(context))
         }.also {
             instance = it
         }

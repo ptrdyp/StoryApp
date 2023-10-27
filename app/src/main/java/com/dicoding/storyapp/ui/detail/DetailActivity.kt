@@ -40,14 +40,14 @@ class DetailActivity : AppCompatActivity() {
         detailViewModel.storyItem.observe(this) {
             Log.d("DetailActivity", "StoryItem observer called with value: $it")
             if (it != null) {
-                 binding.apply {
-                     Glide.with(this@DetailActivity)
-                         .load(it.story.photoUrl)
-                         .fitCenter()
-                         .into(ivDetailPhoto)
-                     tvDetailName.text = it.story.name
-                     tvDetailDescription.text = it.story.description
-                 }
+                binding.apply {
+                    Glide.with(this@DetailActivity)
+                        .load(it.story.photoUrl)
+                        .fitCenter()
+                        .into(ivDetailPhoto)
+                    tvDetailName.text = it.story.name
+                    tvDetailDescription.text = it.story.description
+                }
             } else {
                 showToast()
             }

@@ -93,11 +93,9 @@ class RegisterActivity : AppCompatActivity() {
 
     private fun moveActivity(){
         registerViewModel.registerResponse.observe(this){
-            if (it != null) {
-                if (!it.error){
-                    startActivity(Intent(this, LoginActivity::class.java))
-                    finish()
-                }
+            if (!it.error){
+                startActivity(Intent(this, LoginActivity::class.java))
+                finish()
             }
         }
     }
