@@ -13,6 +13,6 @@ object Injection {
         val user = runBlocking { pref.getUser().first() }
         val apiService = ApiConfig.getApiService(user.token)
         val storyDatabase = StoryDatabase.getDatabase(context)
-        return StoryRepository.getInstance(storyDatabase, apiService)
+        return StoryRepository.getInstance(storyDatabase, pref, apiService)
     }
 }

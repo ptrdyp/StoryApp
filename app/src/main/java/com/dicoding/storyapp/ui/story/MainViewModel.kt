@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
+import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
@@ -39,27 +40,20 @@ class MainViewModel(private val preference: UserPreference, private val reposito
         _loginResponse.value = null
     }
 
-    suspend fun getApiServiceWithToken(): ApiService? {
-        val user = preference.getUser().first()
-        return if (user.isLogin && user.token.isNotEmpty()) {
-            ApiConfig.getApiService(user.token)
-        } else {
-            null
+    fun getApiServiceWithToken(): LiveData<ApiService?>{
+        return liveData {
+            emit(repository.getApiServiceWithToken())
         }
     }
 
-//    fun getStories(apiService: ApiService) {
-//        _isLoading.value = true
-//        viewModelScope.launch {
-//            try {
-//                repository.getStories(apiService).cachedIn(viewModelScope)
-//                _isLoading.value = false
-//            } catch (e: Exception) {
-//                _isLoading.value = false
-//                _toastText.value = Event("Error loading stories: ${e.message}")
-//            }
-//        }
-//    }
+    fun getStories(){
+        viewModelScope.launch {
+            val apiServiceWithToken = repository.getApiServiceWithToken()
+            if (apiServiceWithToken != null) {
+                repository.getStories()
+            }
+        }
+    }
 
     companion object {
         const val TAG = "MainViewModel"

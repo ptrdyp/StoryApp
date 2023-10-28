@@ -8,12 +8,24 @@ import androidx.paging.PagingData
 import androidx.paging.liveData
 import com.dicoding.storyapp.data.StoryPagingSource
 import com.dicoding.storyapp.data.database.StoryDatabase
+import com.dicoding.storyapp.data.di.UserPreference
 import com.dicoding.storyapp.data.response.ListStoryItem
+import com.dicoding.storyapp.data.retrofit.ApiConfig
 import com.dicoding.storyapp.data.retrofit.ApiService
 import com.dicoding.storyapp.utils.Event
+import kotlinx.coroutines.flow.first
 import java.util.concurrent.Flow
 
-class StoryRepository (private val storyDatabase: StoryDatabase, private val apiService: ApiService){
+class StoryRepository (private val storyDatabase: StoryDatabase, private val preference: UserPreference, private val apiService: ApiService){
+
+    suspend fun getApiServiceWithToken(): ApiService? {
+        val user = preference.getUser().first()
+        return if (user.isLogin && user.token.isNotEmpty()) {
+            ApiConfig.getApiService(user.token)
+        } else {
+            null
+        }
+    }
 
     fun getStories(): LiveData<PagingData<ListStoryItem>> {
         return Pager(
@@ -32,9 +44,9 @@ class StoryRepository (private val storyDatabase: StoryDatabase, private val api
         @Volatile
         private var instance: StoryRepository? = null
 
-        fun getInstance(storyDatabase: StoryDatabase, apiService: ApiService) =
+        fun getInstance(storyDatabase: StoryDatabase, preference: UserPreference, apiService: ApiService) =
             instance ?: synchronized(this) {
-                instance ?: StoryRepository(storyDatabase, apiService)
+                instance ?: StoryRepository(storyDatabase, preference, apiService)
             }.also {
                 instance = it
             }

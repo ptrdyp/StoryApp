@@ -94,10 +94,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupData(){
-        lifecycleScope.launch{
-            val apiService = mainViewModel.getApiServiceWithToken()
+        mainViewModel.getApiServiceWithToken().observe(this) {  apiService ->
             if (apiService != null) {
-                mainViewModel.story
+                mainViewModel.getStories()
             } else {
                 showToast()
             }
@@ -106,7 +105,11 @@ class MainActivity : AppCompatActivity() {
         mainViewModel.story.observe(this) {
             lifecycleScope.launch {
                 try {
-                    adapter.submitData(it)
+                    if(it != null) {
+                        adapter.submitData(it)
+                    } else {
+                        Log.e("MainActivity", "PagingData is null")
+                    }
                 } catch (e: Exception) {
                     Log.e("MainActivity", "Error during data submission", e)
                 }
