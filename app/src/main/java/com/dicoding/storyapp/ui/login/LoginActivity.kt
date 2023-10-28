@@ -12,13 +12,15 @@ import android.view.WindowManager
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.dicoding.storyapp.R
-import com.dicoding.storyapp.data.UserModel
+import com.dicoding.storyapp.data.di.UserModel
 import com.dicoding.storyapp.databinding.ActivityLoginBinding
 import com.dicoding.storyapp.utils.ViewModelFactory
 import com.dicoding.storyapp.ui.register.RegisterActivity
 import com.dicoding.storyapp.ui.story.MainActivity
 import com.dicoding.storyapp.ui.welcome.WelcomeActivity
+import kotlinx.coroutines.launch
 
 class LoginActivity : AppCompatActivity() {
 
@@ -103,7 +105,9 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun saveUser(userModel: UserModel) {
-        loginViewModel.saveUser(userModel)
+        lifecycleScope.launch{
+            loginViewModel.saveUser(userModel)
+        }
     }
 
     private fun moveActivity(){
@@ -193,6 +197,7 @@ class LoginActivity : AppCompatActivity() {
 
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
+        super.onBackPressed()
         finishAffinity()
         moveToWelcome()
     }

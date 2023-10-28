@@ -2,15 +2,15 @@ package com.dicoding.storyapp.ui.story
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.dicoding.storyapp.data.response.ListStoryItem
 import com.dicoding.storyapp.databinding.ItemStoryBinding
 
-class StoryAdapter : RecyclerView.Adapter<StoryAdapter.MyViewHolder>() {
+class StoryAdapter : PagingDataAdapter<ListStoryItem, StoryAdapter.MyViewHolder>(DIFF_CALLBACK) {
 
-    private val listStory = ArrayList<ListStoryItem>()
     private var onItemClickCallback: OnItemClickCallBack? = null
 
     interface OnItemClickCallBack{
@@ -43,34 +43,25 @@ class StoryAdapter : RecyclerView.Adapter<StoryAdapter.MyViewHolder>() {
         return MyViewHolder(binding)
     }
 
-    override fun getItemCount(): Int = listStory.size
-
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        val story = listStory[position]
-        holder.bind(story)
-    }
-
-    fun setList(newList: List<ListStoryItem>) {
-        val diffResult = DiffUtil.calculateDiff(MainDiffCallback(listStory, newList))
-        listStory.clear()
-        listStory.addAll(newList)
-        diffResult.dispatchUpdatesTo(this)
-    }
-
-    class MainDiffCallback(
-        private val oldList: List<ListStoryItem>,
-        private val newList: List<ListStoryItem>
-    ) : DiffUtil.Callback() {
-        override fun getOldListSize(): Int = oldList.size
-
-        override fun getNewListSize(): Int = newList.size
-
-        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-            return oldList[oldItemPosition].id == newList[newItemPosition].id
+        val story = getItem(position)
+        if (story != null) {
+            holder.bind(story)
         }
+    }
 
-        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-            return oldList[oldItemPosition] == newList[newItemPosition]
+    companion object {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<ListStoryItem>() {
+            override fun areItemsTheSame(oldItem: ListStoryItem, newItem: ListStoryItem): Boolean {
+                return oldItem == newItem
+            }
+
+            override fun areContentsTheSame(
+                oldItem: ListStoryItem,
+                newItem: ListStoryItem
+            ): Boolean {
+                return oldItem.id == newItem.id
+            }
         }
     }
 }

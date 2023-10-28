@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.util.Pair
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dicoding.storyapp.R
 import com.dicoding.storyapp.data.response.ListStoryItem
@@ -23,6 +24,7 @@ import com.dicoding.storyapp.ui.detail.DetailActivity
 import com.dicoding.storyapp.ui.maps.MapsActivity
 import com.dicoding.storyapp.ui.profile.ProfileActivity
 import com.dicoding.storyapp.ui.welcome.WelcomeActivity
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
@@ -54,9 +56,9 @@ class MainActivity : AppCompatActivity() {
         adapter = StoryAdapter()
         val layoutManager = LinearLayoutManager(this)
         binding.apply {
+            rvStory.adapter = adapter
             rvStory.layoutManager = layoutManager
             rvStory.setHasFixedSize(true)
-            rvStory.adapter = adapter
         }
 
         adapter.setOnItemClickCallback(object : StoryAdapter.OnItemClickCallBack {
@@ -92,18 +94,22 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupData(){
-        mainViewModel.getApiServiceWithToken().observe(this) {  apiService ->
+        lifecycleScope.launch{
+            val apiService = mainViewModel.getApiServiceWithToken()
             if (apiService != null) {
-                mainViewModel.getStories(apiService)
+                mainViewModel.story
             } else {
                 showToast()
             }
         }
-        mainViewModel.listStoryItem.observe(this) {
-            if (it != null && it.isNotEmpty()) {
-                adapter.setList(it)
-            } else {
-                showToast()
+
+        mainViewModel.story.observe(this) {
+            lifecycleScope.launch {
+                try {
+                    adapter.submitData(it)
+                } catch (e: Exception) {
+                    Log.e("MainActivity", "Error during data submission", e)
+                }
             }
         }
     }
@@ -147,7 +153,9 @@ class MainActivity : AppCompatActivity() {
                 true
             }
             R.id.logoutButton -> {
-                mainViewModel.logout()
+                lifecycleScope.launch {
+                    mainViewModel.logout()
+                }
                 true
             }
             else -> super.onOptionsItemSelected(item)

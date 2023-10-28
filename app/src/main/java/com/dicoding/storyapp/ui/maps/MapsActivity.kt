@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.dicoding.storyapp.R
 import com.dicoding.storyapp.data.response.ListStoryItem
 import com.dicoding.storyapp.data.response.StoryResponse
@@ -19,6 +20,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.dicoding.storyapp.databinding.ActivityMapsBinding
 import com.dicoding.storyapp.utils.ViewModelFactory
 import com.google.android.gms.maps.model.LatLngBounds
+import kotlinx.coroutines.launch
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -63,14 +65,18 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun setupData() {
-        showLoading()
-        mapsViewModel.getApiServiceWithToken().observe(this) { apiService ->
+
+        lifecycleScope.launch {
+            val apiService = mapsViewModel.getApiServiceWithToken()
+
             if (apiService != null) {
+                showLoading()
                 mapsViewModel.getStoriesWithLocation(apiService)
             } else (
-                showToast()
+                    showToast()
             )
         }
+
         mapsViewModel.storiesWithLocation.observe(this) { listStory ->
             addManyMarker(listStory)
         }

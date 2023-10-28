@@ -5,9 +5,11 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.dicoding.storyapp.databinding.ActivityDetailBinding
 import com.dicoding.storyapp.utils.ViewModelFactory
+import kotlinx.coroutines.launch
 
 class DetailActivity : AppCompatActivity() {
 
@@ -29,9 +31,11 @@ class DetailActivity : AppCompatActivity() {
     private fun setupData() {
         val id = intent.getStringExtra(EXTRA_ID) ?: ""
 
-        detailViewModel.getApiServiceWithToken().observe(this) { apiService ->
+        lifecycleScope.launch {
+            val apiService = detailViewModel.getApiServiceWithToken()
+
             if (apiService != null) {
-                detailViewModel.getStoryById(apiService, id)
+                detailViewModel.getDetailStory(apiService, id)
             } else {
                 showToast()
             }

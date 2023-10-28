@@ -1,10 +1,9 @@
 package com.dicoding.storyapp.widget
 
 import android.graphics.Bitmap
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dicoding.storyapp.data.StoryWidgetRepository
+import com.dicoding.storyapp.data.repository.StoryWidgetRepository
 import com.dicoding.storyapp.data.di.UserPreference
 import com.dicoding.storyapp.data.retrofit.ApiService
 import kotlinx.coroutines.Dispatchers

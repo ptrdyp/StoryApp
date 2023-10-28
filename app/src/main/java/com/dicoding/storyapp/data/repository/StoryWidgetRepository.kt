@@ -1,4 +1,4 @@
-package com.dicoding.storyapp.data
+package com.dicoding.storyapp.data.repository
 
 import android.appwidget.AppWidgetManager
 import android.graphics.Bitmap
@@ -58,7 +58,7 @@ class StoryWidgetRepository private constructor(
     }
 
     private suspend fun getWidgetItems(): List<ListStoryItem> {
-        val response = apiService.getStories()
+        val response = apiService.getStoriesWidget()
         if (response.isSuccessful) {
             response.body()?.listStory ?: emptyList()
         } else {

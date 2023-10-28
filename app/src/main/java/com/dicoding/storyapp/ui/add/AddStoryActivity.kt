@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.dicoding.storyapp.R
 import com.dicoding.storyapp.databinding.ActivityAddStoryBinding
 import com.dicoding.storyapp.ui.story.MainActivity
@@ -17,6 +18,7 @@ import com.dicoding.storyapp.utils.ViewModelFactory
 import com.dicoding.storyapp.utils.getImageUri
 import com.dicoding.storyapp.utils.reduceFileImage
 import com.dicoding.storyapp.utils.uriToFile
+import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -121,12 +123,16 @@ class  AddStoryActivity : AppCompatActivity() {
 
     private fun postData(file: MultipartBody.Part, description: String) {
         val descriptionRequestBody = description.toRequestBody(MultipartBody.FORM)
-        addStoryViewModel.getApiServiceWithToken().observe(this) { apiService ->
+
+        lifecycleScope.launch {
+            val apiService = addStoryViewModel.getApiServiceWithToken()
+
             if (apiService != null) {
                 addStoryViewModel.postStory(apiService, file, descriptionRequestBody)
             }
         }
-        addStoryViewModel.addStoryResponse.observe(this) {
+
+        addStoryViewModel.addStory.observe(this) {
             if (!it.error) {
                 moveToMainActivity()
             }

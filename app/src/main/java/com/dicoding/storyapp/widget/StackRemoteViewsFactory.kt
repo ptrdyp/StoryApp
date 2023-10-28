@@ -7,7 +7,7 @@ import android.graphics.Bitmap
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
 import com.dicoding.storyapp.R
-import com.dicoding.storyapp.data.StoryWidgetRepository
+import com.dicoding.storyapp.data.repository.StoryWidgetRepository
 import com.dicoding.storyapp.data.di.UserPreference
 import com.dicoding.storyapp.data.di.dataStore
 import com.dicoding.storyapp.data.retrofit.ApiConfig

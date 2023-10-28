@@ -2,6 +2,7 @@ package com.dicoding.storyapp.data.retrofit
 
 import com.dicoding.storyapp.data.response.AddStoryResponse
 import com.dicoding.storyapp.data.response.DetailStoryResponse
+import com.dicoding.storyapp.data.response.ListStoryItem
 import com.dicoding.storyapp.data.response.LoginResponse
 import com.dicoding.storyapp.data.response.RegisterResponse
 import com.dicoding.storyapp.data.response.StoryResponse
@@ -35,7 +36,13 @@ interface ApiService {
     ) : Call<LoginResponse>
 
     @GET("stories")
-    suspend fun getStories(): Response<StoryResponse>
+    suspend fun getStories(
+        @Query("page") page: Int = 1,
+        @Query("size") size: Int = 20
+    ): StoryResponse
+
+    @GET("stories")
+    suspend fun getStoriesWidget(): Response<StoryResponse>
 
     @GET("stories")
     suspend fun getStoriesWithLocation(
