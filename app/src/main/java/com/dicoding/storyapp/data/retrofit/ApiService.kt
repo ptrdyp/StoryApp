@@ -13,6 +13,7 @@ import retrofit2.Response
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
@@ -39,7 +40,7 @@ interface ApiService {
     suspend fun getStories(
         @Query("page") page: Int = 1,
         @Query("size") size: Int = 20
-    ): StoryResponse
+    ): Response<StoryResponse>
 
     @GET("stories")
     suspend fun getStoriesWidget(): Response<StoryResponse>

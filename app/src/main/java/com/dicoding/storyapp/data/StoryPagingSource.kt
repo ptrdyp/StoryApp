@@ -1,12 +1,17 @@
 package com.dicoding.storyapp.data
 
+import android.util.JsonToken
 import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import com.dicoding.storyapp.data.di.UserPreference
 import com.dicoding.storyapp.data.response.ListStoryItem
+import com.dicoding.storyapp.data.retrofit.ApiConfig
 import com.dicoding.storyapp.data.retrofit.ApiService
+import kotlinx.coroutines.flow.first
+import okhttp3.Interceptor
 
-class StoryPagingSource(private val apiService: ApiService) : PagingSource<Int, ListStoryItem>() {
+class StoryPagingSource(private val preference: UserPreference, private val apiService: ApiService) : PagingSource<Int, ListStoryItem>() {
     override fun getRefreshKey(state: PagingState<Int, ListStoryItem>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
             val anchorPage = state.closestPageToPosition(anchorPosition)
@@ -17,15 +22,27 @@ class StoryPagingSource(private val apiService: ApiService) : PagingSource<Int, 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, ListStoryItem> {
         return try {
             val position = params.key ?: INITIAL_PAGE_INDEX
-            val responseData = apiService.getStories(position, params.loadSize)
+            val token = preference.getUser().first().token
 
-            Log.d("StoryPagingSource", "Data loaded: $responseData")
+            if (token.isNotEmpty()) {
+                val responseData = apiService.getStories(position, params.loadSize)
 
-            LoadResult.Page (
-                data = responseData.listStory,
-                prevKey = if (position == INITIAL_PAGE_INDEX) null else position - 1,
-                nextKey = if (responseData.listStory.isNullOrEmpty()) null else position + 1
-            )
+                if (responseData.isSuccessful) {
+                    Log.d("StoryPagingSource", "Data loaded: $responseData")
+
+                    LoadResult.Page (
+                        data = responseData.body()?.listStory ?: emptyList(),
+                        prevKey = if (position == INITIAL_PAGE_INDEX) null else position - 1,
+                        nextKey = if (responseData.body()?.listStory.isNullOrEmpty()) null else position + 1
+                    )
+                } else {
+                    Log.d("Token", "Load Error: $token")
+                    LoadResult.Error(Exception("Failed"))
+                }
+            } else {
+                LoadResult.Error(Exception("Failed"))
+            }
+
         } catch (e: Exception) {
             Log.e("StoryPagingSource", "Error loading data", e)
             LoadResult.Error(e)

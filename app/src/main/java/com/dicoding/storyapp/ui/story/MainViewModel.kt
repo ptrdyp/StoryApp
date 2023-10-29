@@ -1,5 +1,6 @@
 package com.dicoding.storyapp.ui.story
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -13,14 +14,18 @@ import com.dicoding.storyapp.data.di.UserModel
 import com.dicoding.storyapp.data.di.UserPreference
 import com.dicoding.storyapp.data.response.ListStoryItem
 import com.dicoding.storyapp.data.response.LoginResponse
+import com.dicoding.storyapp.data.response.StoryResponse
 import com.dicoding.storyapp.data.retrofit.ApiConfig
 import com.dicoding.storyapp.data.retrofit.ApiService
 import com.dicoding.storyapp.utils.Event
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
-class MainViewModel(private val preference: UserPreference, private val repository: StoryRepository, private val apiService: ApiService) : ViewModel() {
+class MainViewModel(private val preference: UserPreference, private val repository: StoryRepository) : ViewModel() {
     private val _loginResponse = MutableLiveData<LoginResponse?>()
+
+    private val _storyList = MutableLiveData<StoryResponse>()
+    val storyList: LiveData<StoryResponse> = _storyList
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
@@ -40,18 +45,12 @@ class MainViewModel(private val preference: UserPreference, private val reposito
         _loginResponse.value = null
     }
 
-    fun getApiServiceWithToken(): LiveData<ApiService?>{
-        return liveData {
-            emit(repository.getApiServiceWithToken())
-        }
-    }
-
-    fun getStories(){
-        viewModelScope.launch {
-            val apiServiceWithToken = repository.getApiServiceWithToken()
-            if (apiServiceWithToken != null) {
-                repository.getStories()
-            }
+    suspend fun getApiServiceWithToken(): ApiService? {
+        val user = preference.getUser().first()
+        return if (user.isLogin && user.token.isNotEmpty()) {
+            ApiConfig.getApiService(user.token)
+        } else {
+            null
         }
     }
 

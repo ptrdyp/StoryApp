@@ -16,6 +16,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dicoding.storyapp.R
 import com.dicoding.storyapp.data.response.ListStoryItem
+import com.dicoding.storyapp.data.retrofit.ApiConfig
 import com.dicoding.storyapp.databinding.ActivityMainBinding
 import com.dicoding.storyapp.databinding.ItemStoryBinding
 import com.dicoding.storyapp.ui.add.AddStoryActivity
@@ -79,13 +80,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupUser() {
+        Log.d("MainActivity", "Setup user is called.")
         showLoading()
         mainViewModel.getUser().observe(this) {
             Log.d("MainActivity", "User isLogin: ${it.isLogin}")
             token = it.token
             if (it.isLogin) {
                 Log.d("TokenDebug", "Stored Token: $token")
-                setupData()
+                setupData(token)
             } else {
                 moveToWelcomeActivity()
             }
@@ -93,20 +95,23 @@ class MainActivity : AppCompatActivity() {
         showToast()
     }
 
-    private fun setupData(){
-        mainViewModel.getApiServiceWithToken().observe(this) {  apiService ->
+    private fun setupData(token: String){
+        Log.d("MainActivity", "Token sent in request: $token")
+
+        lifecycleScope.launch {
+            val apiService = mainViewModel.getApiServiceWithToken()
             if (apiService != null) {
-                mainViewModel.getStories()
+                mainViewModel.storyList
             } else {
                 showToast()
             }
         }
 
-        mainViewModel.story.observe(this) {
+        mainViewModel.story.observe(this@MainActivity) {
             lifecycleScope.launch {
                 try {
                     if(it != null) {
-                        adapter.submitData(it)
+                        adapter.submitData(lifecycle, it)
                     } else {
                         Log.e("MainActivity", "PagingData is null")
                     }

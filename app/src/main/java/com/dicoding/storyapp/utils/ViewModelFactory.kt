@@ -31,7 +31,7 @@ class ViewModelFactory(private val repository: StoryRepository, private val pref
                 LoginViewModel(preference, apiService) as T
             }
             modelClass.isAssignableFrom(MainViewModel::class.java) -> {
-                MainViewModel(preference, repository, apiService) as T
+                MainViewModel(preference, repository) as T
             }
             modelClass.isAssignableFrom(DetailViewModel::class.java) -> {
                 DetailViewModel(preference) as T
