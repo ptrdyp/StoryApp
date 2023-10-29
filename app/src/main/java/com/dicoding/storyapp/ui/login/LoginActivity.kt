@@ -114,6 +114,7 @@ class LoginActivity : AppCompatActivity() {
         loginViewModel.loginResponse.observe(this) {
             if (it != null) {
                 if (!it.error){
+                    ViewModelFactory.refreshObject()
                     startActivity(Intent(this, MainActivity::class.java))
                     finish()
                 }

@@ -38,7 +38,7 @@
     <string name="app_widget_description">Ini adalah deskripsi dari app widget</string>
     <string name="empty_text">TIDAK ADA DATA</string>
     <string name="profile">Profil</string>
-    <string name="setting">Setting</string>
+    <string name="setting">Pengaturan</string>
     <string name="maps">Maps</string>
-    <string name="retry">Retry</string>
+    <string name="retry">Coba lagi</string>
 </resources>

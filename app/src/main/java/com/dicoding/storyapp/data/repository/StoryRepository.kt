@@ -22,29 +22,15 @@ import retrofit2.HttpException
 
 class StoryRepository (private val storyDatabase: StoryDatabase, private val preference: UserPreference, private val apiService: ApiService){
 
-    private suspend fun getApiServiceWithToken(): ApiService? {
-        val user = preference.getUser().first()
-        return if (user.isLogin && user.token.isNotEmpty()) {
-            ApiConfig.getApiService(user.token)
-        } else {
-            null
-        }
-    }
-
     fun getStories(): LiveData<PagingData<ListStoryItem>> {
-        val apiServiceWithToken = runBlocking { getApiServiceWithToken() }
-        return if (apiServiceWithToken != null) {
-            return Pager(
-                config = PagingConfig(
-                    pageSize = 5
-                ),
-                pagingSourceFactory = {
-                    StoryPagingSource(preference, apiService)
-                }
-            ).liveData
-        } else {
-            MutableLiveData<PagingData<ListStoryItem>>()
-        }
+        return Pager(
+            config = PagingConfig(
+                pageSize = 5
+            ),
+            pagingSourceFactory = {
+                StoryPagingSource(preference, apiService)
+            }
+        ).liveData
     }
 
 
@@ -60,5 +46,10 @@ class StoryRepository (private val storyDatabase: StoryDatabase, private val pre
             }.also {
                 instance = it
             }
+
+        fun resetInstance() {
+            instance = null
+        }
+
     }
 }

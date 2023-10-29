@@ -88,7 +88,7 @@ class MainActivity : AppCompatActivity() {
             _token.value = it.token
             if (it.isLogin) {
                 Log.d("TokenDebug", "Stored Token: ${it.token}")
-                setupData(it.token)
+                setupData()
             } else {
                 moveToWelcomeActivity()
             }
@@ -96,19 +96,9 @@ class MainActivity : AppCompatActivity() {
         showToast()
     }
 
-    private fun setupData(token: String){
-        Log.d("MainActivity", "Token sent in request: $token")
-
-        lifecycleScope.launch {
-            val apiService = mainViewModel.getApiServiceWithToken()
-            if (apiService != null) {
-                Log.d("MainActivity", "Token before API call: $token")
-
-                mainViewModel.story.observe(this@MainActivity) {
-                    adapter.submitData(lifecycle, it)
-                }
-
-            }
+    private fun setupData(){
+        mainViewModel.story.observe(this@MainActivity) {
+            adapter.submitData(lifecycle, it)
         }
     }
 

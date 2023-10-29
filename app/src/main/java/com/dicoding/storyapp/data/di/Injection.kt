@@ -15,4 +15,8 @@ object Injection {
         val storyDatabase = StoryDatabase.getDatabase(context)
         return StoryRepository.getInstance(storyDatabase, pref, apiService)
     }
+
+    fun resetInstance() {
+        StoryRepository.resetInstance()
+    }
 }

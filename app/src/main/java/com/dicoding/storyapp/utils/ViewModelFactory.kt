@@ -63,5 +63,10 @@ class ViewModelFactory(private val repository: StoryRepository, private val pref
         }.also {
             instance = it
         }
+
+        fun refreshObject() {
+            instance = null
+            Injection.resetInstance()
+        }
     }
 }
