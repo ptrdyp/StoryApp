@@ -12,14 +12,18 @@ import androidx.paging.cachedIn
 import com.dicoding.storyapp.data.repository.StoryRepository
 import com.dicoding.storyapp.data.di.UserModel
 import com.dicoding.storyapp.data.di.UserPreference
+import com.dicoding.storyapp.data.response.ErrorResponse
 import com.dicoding.storyapp.data.response.ListStoryItem
 import com.dicoding.storyapp.data.response.LoginResponse
 import com.dicoding.storyapp.data.response.StoryResponse
 import com.dicoding.storyapp.data.retrofit.ApiConfig
 import com.dicoding.storyapp.data.retrofit.ApiService
+import com.dicoding.storyapp.ui.add.AddStoryViewModel
 import com.dicoding.storyapp.utils.Event
+import com.google.gson.Gson
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 
 class MainViewModel(private val preference: UserPreference, private val repository: StoryRepository) : ViewModel() {
     private val _loginResponse = MutableLiveData<LoginResponse?>()
@@ -40,11 +44,6 @@ class MainViewModel(private val preference: UserPreference, private val reposito
         return preference.getUser().asLiveData()
     }
 
-    suspend fun logout() {
-        preference.logout()
-        _loginResponse.value = null
-    }
-
     suspend fun getApiServiceWithToken(): ApiService? {
         val user = preference.getUser().first()
         return if (user.isLogin && user.token.isNotEmpty()) {
@@ -52,6 +51,11 @@ class MainViewModel(private val preference: UserPreference, private val reposito
         } else {
             null
         }
+    }
+
+    suspend fun logout() {
+        preference.logout()
+        _loginResponse.value = null
     }
 
     companion object {

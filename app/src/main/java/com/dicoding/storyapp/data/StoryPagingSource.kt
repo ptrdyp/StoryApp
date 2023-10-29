@@ -23,10 +23,11 @@ class StoryPagingSource(private val preference: UserPreference, private val apiS
         return try {
             val position = params.key ?: INITIAL_PAGE_INDEX
             val token = preference.getUser().first().token
+            Log.d("StoryPagingSource", "Token before API call: $token")
+            val responseData = apiService.getStories(position, params.loadSize)
+            Log.d("StoryPagingSource", "Token after API call: $token")
 
             if (token.isNotEmpty()) {
-                val responseData = apiService.getStories(position, params.loadSize)
-
                 if (responseData.isSuccessful) {
                     Log.d("StoryPagingSource", "Data loaded: $responseData")
 

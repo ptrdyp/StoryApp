@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.util.Pair
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dicoding.storyapp.R
@@ -35,7 +36,7 @@ class MainActivity : AppCompatActivity() {
         ViewModelFactory.getInstance(this)
     }
 
-    private var token = ""
+    private val _token = MutableLiveData<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,10 +85,10 @@ class MainActivity : AppCompatActivity() {
         showLoading()
         mainViewModel.getUser().observe(this) {
             Log.d("MainActivity", "User isLogin: ${it.isLogin}")
-            token = it.token
+            _token.value = it.token
             if (it.isLogin) {
-                Log.d("TokenDebug", "Stored Token: $token")
-                setupData(token)
+                Log.d("TokenDebug", "Stored Token: ${it.token}")
+                setupData(it.token)
             } else {
                 moveToWelcomeActivity()
             }
@@ -101,23 +102,12 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             val apiService = mainViewModel.getApiServiceWithToken()
             if (apiService != null) {
-                mainViewModel.storyList
-            } else {
-                showToast()
-            }
-        }
+                Log.d("MainActivity", "Token before API call: $token")
 
-        mainViewModel.story.observe(this@MainActivity) {
-            lifecycleScope.launch {
-                try {
-                    if(it != null) {
-                        adapter.submitData(lifecycle, it)
-                    } else {
-                        Log.e("MainActivity", "PagingData is null")
-                    }
-                } catch (e: Exception) {
-                    Log.e("MainActivity", "Error during data submission", e)
+                mainViewModel.story.observe(this@MainActivity) {
+                    adapter.submitData(lifecycle, it)
                 }
+
             }
         }
     }

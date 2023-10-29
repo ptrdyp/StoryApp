@@ -14,18 +14,37 @@ import com.dicoding.storyapp.data.di.UserPreference
 import com.dicoding.storyapp.data.response.ListStoryItem
 import com.dicoding.storyapp.data.retrofit.ApiConfig
 import com.dicoding.storyapp.data.retrofit.ApiService
+import com.dicoding.storyapp.ui.add.AddStoryViewModel
+import com.dicoding.storyapp.utils.Event
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
+import retrofit2.HttpException
 
 class StoryRepository (private val storyDatabase: StoryDatabase, private val preference: UserPreference, private val apiService: ApiService){
 
+    private suspend fun getApiServiceWithToken(): ApiService? {
+        val user = preference.getUser().first()
+        return if (user.isLogin && user.token.isNotEmpty()) {
+            ApiConfig.getApiService(user.token)
+        } else {
+            null
+        }
+    }
+
     fun getStories(): LiveData<PagingData<ListStoryItem>> {
-        return Pager(
-            config = PagingConfig(
-                pageSize = 5
-            ),
-            pagingSourceFactory = {
-                StoryPagingSource(preference, apiService)
-            }
-        ).liveData
+        val apiServiceWithToken = runBlocking { getApiServiceWithToken() }
+        return if (apiServiceWithToken != null) {
+            return Pager(
+                config = PagingConfig(
+                    pageSize = 5
+                ),
+                pagingSourceFactory = {
+                    StoryPagingSource(preference, apiService)
+                }
+            ).liveData
+        } else {
+            MutableLiveData<PagingData<ListStoryItem>>()
+        }
     }
 
 
