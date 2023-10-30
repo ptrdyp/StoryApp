@@ -2,7 +2,6 @@ package com.dicoding.storyapp.data.retrofit
 
 import com.dicoding.storyapp.data.response.AddStoryResponse
 import com.dicoding.storyapp.data.response.DetailStoryResponse
-import com.dicoding.storyapp.data.response.ListStoryItem
 import com.dicoding.storyapp.data.response.LoginResponse
 import com.dicoding.storyapp.data.response.RegisterResponse
 import com.dicoding.storyapp.data.response.StoryResponse
@@ -13,7 +12,6 @@ import retrofit2.Response
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
-import retrofit2.http.Header
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
@@ -40,7 +38,7 @@ interface ApiService {
     suspend fun getStories(
         @Query("page") page: Int = 1,
         @Query("size") size: Int = 20
-    ): List<ListStoryItem>
+    ): Response<StoryResponse>
 
     @GET("stories")
     suspend fun getStoriesWidget(): Response<StoryResponse>

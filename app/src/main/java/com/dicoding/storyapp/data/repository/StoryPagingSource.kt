@@ -25,11 +25,18 @@ class StoryPagingSource(private val preference: UserPreference, private val apiS
             Log.d("StoryPagingSource", "Token after API call: $token")
 
             if (token.isNotEmpty()) {
-                LoadResult.Page (
-                    data = responseData,
-                    prevKey = if (position == INITIAL_PAGE_INDEX) null else position - 1,
-                    nextKey = if (responseData.isNullOrEmpty()) null else position + 1
-                )
+                if (responseData.isSuccessful) {
+                    Log.d("StoryPagingSource", "Data loaded: $responseData")
+
+                    LoadResult.Page (
+                        data = responseData.body()?.listStory ?: emptyList(),
+                        prevKey = if (position == INITIAL_PAGE_INDEX) null else position - 1,
+                        nextKey = if (responseData.body()?.listStory.isNullOrEmpty()) null else position + 1
+                    )
+                } else {
+                    Log.d("Token", "Load Error: $token")
+                    LoadResult.Error(Exception("Failed"))
+                }
             } else {
                 LoadResult.Error(Exception("Failed"))
             }
