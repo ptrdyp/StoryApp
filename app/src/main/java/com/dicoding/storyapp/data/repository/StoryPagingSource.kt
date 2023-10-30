@@ -1,15 +1,12 @@
-package com.dicoding.storyapp.data
+package com.dicoding.storyapp.data.repository
 
-import android.util.JsonToken
 import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.dicoding.storyapp.data.di.UserPreference
 import com.dicoding.storyapp.data.response.ListStoryItem
-import com.dicoding.storyapp.data.retrofit.ApiConfig
 import com.dicoding.storyapp.data.retrofit.ApiService
 import kotlinx.coroutines.flow.first
-import okhttp3.Interceptor
 
 class StoryPagingSource(private val preference: UserPreference, private val apiService: ApiService) : PagingSource<Int, ListStoryItem>() {
     override fun getRefreshKey(state: PagingState<Int, ListStoryItem>): Int? {
@@ -28,18 +25,11 @@ class StoryPagingSource(private val preference: UserPreference, private val apiS
             Log.d("StoryPagingSource", "Token after API call: $token")
 
             if (token.isNotEmpty()) {
-                if (responseData.isSuccessful) {
-                    Log.d("StoryPagingSource", "Data loaded: $responseData")
-
-                    LoadResult.Page (
-                        data = responseData.body()?.listStory ?: emptyList(),
-                        prevKey = if (position == INITIAL_PAGE_INDEX) null else position - 1,
-                        nextKey = if (responseData.body()?.listStory.isNullOrEmpty()) null else position + 1
-                    )
-                } else {
-                    Log.d("Token", "Load Error: $token")
-                    LoadResult.Error(Exception("Failed"))
-                }
+                LoadResult.Page (
+                    data = responseData,
+                    prevKey = if (position == INITIAL_PAGE_INDEX) null else position - 1,
+                    nextKey = if (responseData.isNullOrEmpty()) null else position + 1
+                )
             } else {
                 LoadResult.Error(Exception("Failed"))
             }

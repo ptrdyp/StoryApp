@@ -58,7 +58,11 @@ class MainActivity : AppCompatActivity() {
         adapter = StoryAdapter()
         val layoutManager = LinearLayoutManager(this)
         binding.apply {
-            rvStory.adapter = adapter
+            rvStory.adapter = adapter.withLoadStateFooter(
+                footer = LoadingStateAdapter {
+                    adapter.retry()
+                }
+            )
             rvStory.layoutManager = layoutManager
             rvStory.setHasFixedSize(true)
         }

@@ -40,7 +40,7 @@ interface ApiService {
     suspend fun getStories(
         @Query("page") page: Int = 1,
         @Query("size") size: Int = 20
-    ): Response<StoryResponse>
+    ): List<ListStoryItem>
 
     @GET("stories")
     suspend fun getStoriesWidget(): Response<StoryResponse>
