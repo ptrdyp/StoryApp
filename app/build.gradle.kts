@@ -35,9 +35,16 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+
     kotlinOptions {
         jvmTarget = "17"
         freeCompilerArgs += listOf("-Xopt-in=kotlin.RequiresOptIn")
+    }
+
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
+        }
     }
 
     buildFeatures {
@@ -86,7 +93,9 @@ dependencies {
 
     // EXIF
     implementation("androidx.exifinterface:exifinterface:1.3.6")
+
     implementation("com.google.android.gms:play-services-maps:18.2.0")
+    implementation("com.google.android.gms:play-services-location:21.0.1")
 
     // Testing
     testImplementation("junit:junit:4.13.2")

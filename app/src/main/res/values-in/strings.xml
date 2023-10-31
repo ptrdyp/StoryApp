@@ -39,6 +39,15 @@
     <string name="empty_text">TIDAK ADA DATA</string>
     <string name="profile">Profil</string>
     <string name="setting">Pengaturan</string>
+    <string name="title_activity_maps">MapsActivity</string>
     <string name="maps">Maps</string>
     <string name="retry">Coba lagi</string>
+    <string name="normal">Normal</string>
+    <string name="satellite">Satellite</string>
+    <string name="terrain">Terrain</string>
+    <string name="hybrid">Hybrid</string>
+    <string name="upload_with_your_location">Unggah dengan lokasi anda</string>
+    <string name="image_story">Gambar cerita</string>
+    <string name="image_is_required">Gambar harus ditambahkan</string>
+    <string name="description_is_required">Description harus ditambahkan</string>
 </resources>

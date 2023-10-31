@@ -41,4 +41,12 @@
     <string name="title_activity_maps">MapsActivity</string>
     <string name="maps">Maps</string>
     <string name="retry">Retry</string>
+    <string name="normal">Normal</string>
+    <string name="satellite">Satellite</string>
+    <string name="terrain">Terrain</string>
+    <string name="hybrid">Hybrid</string>
+    <string name="upload_with_your_location">Upload with your location</string>
+    <string name="image_story">Image story</string>
+    <string name="image_is_required">Image is required</string>
+    <string name="description_is_required">Description is required</string>
 </resources>

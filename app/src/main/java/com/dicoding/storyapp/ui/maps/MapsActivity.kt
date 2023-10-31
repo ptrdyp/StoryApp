@@ -3,14 +3,14 @@ package com.dicoding.storyapp.ui.maps
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.dicoding.storyapp.R
-import com.dicoding.storyapp.data.response.ListStoryItem
 import com.dicoding.storyapp.data.response.StoryResponse
-
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -29,8 +29,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private val mapsViewModel by viewModels<MapsViewModel> {
         ViewModelFactory.getInstance(this)
     }
-
-    private var token = ""
+    private val boundsBuilder = LatLngBounds.Builder()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,6 +63,39 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         setupData()
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.map_options, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.normal_type -> {
+                mMap.mapType = GoogleMap.MAP_TYPE_NORMAL
+                supportActionBar?.title = getString(R.string.normal)
+                true
+            }
+            R.id.satellite_type -> {
+                mMap.mapType = GoogleMap.MAP_TYPE_SATELLITE
+                supportActionBar?.title = getString(R.string.satellite)
+                true
+            }
+            R.id.terrain_type -> {
+                mMap.mapType = GoogleMap.MAP_TYPE_TERRAIN
+                supportActionBar?.title = getString(R.string.terrain)
+                true
+            }
+            R.id.hybrid_type -> {
+                mMap.mapType = GoogleMap.MAP_TYPE_HYBRID
+                supportActionBar?.title = getString(R.string.hybrid)
+                true
+            }
+            else -> {
+                super.onOptionsItemSelected(item)
+            }
+        }
+    }
+
     private fun setupData() {
 
         lifecycleScope.launch {
@@ -93,9 +125,17 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     .snippet(data.description)
             )
             Log.d("MarkerData", "Name: ${data.name}, Lat: ${data.lat}, Lon: ${data.lon}")
+            boundsBuilder.include(latLng)
         }
-        val indonesia = LatLng(-0.7893, 113.9213)
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(indonesia))
+        val bounds: LatLngBounds = boundsBuilder.build()
+        mMap.animateCamera(
+            CameraUpdateFactory.newLatLngBounds(
+                bounds,
+                resources.displayMetrics.widthPixels,
+                resources.displayMetrics.heightPixels,
+                300
+            )
+        )
     }
 
     private fun showLoading() {

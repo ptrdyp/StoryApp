@@ -1,5 +1,6 @@
 package com.dicoding.storyapp.ui.add
 
+import android.location.Location
 import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -26,6 +27,7 @@ import retrofit2.HttpException
 class AddStoryViewModel(private val preference: UserPreference) : ViewModel() {
     var currentImageUri: Uri? = null
     var description: String = ""
+    var currentLocation: Location? = null
 
     private val _addStory = MutableLiveData<AddStoryResponse>()
     val addStory: LiveData<AddStoryResponse> = _addStory
@@ -45,12 +47,12 @@ class AddStoryViewModel(private val preference: UserPreference) : ViewModel() {
         }
     }
 
-    suspend fun postStory(apiService: ApiService, file: MultipartBody.Part, description: RequestBody) {
+    suspend fun postStory(apiService: ApiService, file: MultipartBody.Part, description: RequestBody, currentLocation: Location? = null) {
         _isLoading.value = true
         try {
             val apiServiceWithToken = getApiServiceWithToken()
             if (apiServiceWithToken != null) {
-                val response = apiService.uploadStory(file, description)
+                val response = apiService.uploadStory(file, description, currentLocation?.latitude, currentLocation?.longitude)
                 if (response.isSuccessful) {
                     _addStory.value = response.body()
                     _toastText.value = Event(response.body()?.message.toString())
@@ -72,9 +74,10 @@ class AddStoryViewModel(private val preference: UserPreference) : ViewModel() {
         return preference.getUser().asLiveData()
     }
 
-    fun saveInstanceState(imageUri: Uri?, description: String) {
+    fun saveInstanceState(imageUri: Uri?, description: String, currentLocation: Location?) {
         currentImageUri = imageUri
         this.description = description
+        this.currentLocation = currentLocation
     }
 
     companion object {

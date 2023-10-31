@@ -2,6 +2,9 @@ package com.dicoding.storyapp.ui.add
 
 import android.content.Intent
 import android.net.Uri
+import android.Manifest
+import android.content.pm.PackageManager
+import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -10,6 +13,7 @@ import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.dicoding.storyapp.R
 import com.dicoding.storyapp.databinding.ActivityAddStoryBinding
@@ -18,6 +22,8 @@ import com.dicoding.storyapp.utils.ViewModelFactory
 import com.dicoding.storyapp.utils.getImageUri
 import com.dicoding.storyapp.utils.reduceFileImage
 import com.dicoding.storyapp.utils.uriToFile
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
@@ -27,7 +33,11 @@ import okhttp3.RequestBody.Companion.toRequestBody
 class  AddStoryActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAddStoryBinding
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
     private var currentImageUri: Uri? = null
+    private var currentLocation: Location? = null
+    private var isWithLocation: Boolean = true
+    private var isImageIncluded: Boolean = false
     private val addStoryViewModel by viewModels<AddStoryViewModel> {
         ViewModelFactory.getInstance(this)
     }
@@ -47,23 +57,68 @@ class  AddStoryActivity : AppCompatActivity() {
             showImage()
             showLoading()
         }
+
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        getMyLastLocation()
         setupButton()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        addStoryViewModel.saveInstanceState(currentImageUri, binding.descriptionEditText.text.toString())
+        addStoryViewModel.saveInstanceState(currentImageUri, binding.descriptionEditText.text.toString(), currentLocation)
+    }
+
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        when {
+            permissions[Manifest.permission.ACCESS_FINE_LOCATION] ?: false -> {
+               getMyLastLocation()
+            }
+            permissions[Manifest.permission.ACCESS_COARSE_LOCATION] ?: false -> {
+                getMyLastLocation()
+            }
+            else -> {}
+        }
+    }
+
+    private fun checkPermission(permission: String): Boolean {
+        return ContextCompat.checkSelfPermission(
+            this,
+            permission
+        ) == PackageManager.PERMISSION_GRANTED
+    }
+
+    private fun getMyLastLocation() {
+        if (checkPermission(Manifest.permission.ACCESS_FINE_LOCATION) && checkPermission(Manifest.permission.ACCESS_COARSE_LOCATION)) {
+            fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
+                currentLocation = location
+                Log.d(TAG, "getMyLastLocation: $location")
+            }
+        } else {
+            requestPermissionLauncher.launch(
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+            )
+        }
     }
 
     private fun setupButton() {
-        binding.galleryButton.setOnClickListener {
-            startGallery()
-        }
-        binding.cameraButton.setOnClickListener {
-            startCamera()
-        }
-        binding.uploadButton.setOnClickListener {
-            uploadStory()
+        binding.apply {
+            galleryButton.setOnClickListener {
+                startGallery()
+            }
+            cameraButton.setOnClickListener {
+                startCamera()
+            }
+            cbLocation.setOnCheckedChangeListener { _, isChecked ->
+                isWithLocation = isChecked
+            }
+            uploadButton.setOnClickListener {
+                uploadStory()
+            }
         }
     }
 
@@ -101,6 +156,7 @@ class  AddStoryActivity : AppCompatActivity() {
     private fun showImage() {
         currentImageUri?.let {
             Log.d("Image URI", "showImage: $it")
+            isImageIncluded = true
             binding.previewImageView.setImageURI(it)
         }
     }
@@ -108,27 +164,39 @@ class  AddStoryActivity : AppCompatActivity() {
     private fun uploadStory() {
         showLoading()
         val description = binding.descriptionEditText.text.toString()
-        addStoryViewModel.getUser().observe(this) {
-            currentImageUri?.let { uri ->
-                val imageFile = uriToFile(uri, this).reduceFileImage()
-                val requestImageFile = imageFile.asRequestBody("image/jpeg".toMediaType())
-                val multipartBody = MultipartBody.Part.createFormData(
-                    "photo", imageFile.name, requestImageFile
-                )
-                Log.d("Image File", "showImage: ${imageFile.path}")
-                postData(multipartBody, description)
-            } ?: showToast()
+        if (!isImageIncluded) {
+            Toast.makeText(this, getString(R.string.image_is_required), Toast.LENGTH_SHORT).show()
+        } else if (description == "") {
+            Toast.makeText(this, getString(R.string.description_is_required), Toast.LENGTH_SHORT).show()
+        } else {
+            addStoryViewModel.getUser().observe(this) {
+                currentImageUri?.let { uri ->
+                    val imageFile = uriToFile(uri, this).reduceFileImage()
+                    val requestImageFile = imageFile.asRequestBody("image/jpeg".toMediaType())
+                    val multipartBody = MultipartBody.Part.createFormData(
+                        "photo", imageFile.name, requestImageFile
+                    )
+                    postData(multipartBody, description, currentLocation)
+                    Log.d(TAG, "uploadStory: $currentLocation")
+                } ?: showToast()
+            }
         }
+
     }
 
-    private fun postData(file: MultipartBody.Part, description: String) {
+    private fun postData(file: MultipartBody.Part, description: String, currentLocation: Location? = null) {
         val descriptionRequestBody = description.toRequestBody(MultipartBody.FORM)
 
         lifecycleScope.launch {
             val apiService = addStoryViewModel.getApiServiceWithToken()
 
             if (apiService != null) {
-                addStoryViewModel.postStory(apiService, file, descriptionRequestBody)
+                if (!isWithLocation) {
+                    addStoryViewModel.postStory(apiService, file, descriptionRequestBody)
+                } else {
+                    addStoryViewModel.postStory(apiService, file, descriptionRequestBody, currentLocation)
+                    Log.d(TAG, "postData: $currentLocation")
+                }
             }
         }
 
@@ -161,5 +229,9 @@ class  AddStoryActivity : AppCompatActivity() {
                 ).show()
             }
         }
+    }
+
+    companion object {
+        const val TAG = "AddStoryActivity"
     }
 }
