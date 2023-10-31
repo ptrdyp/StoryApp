@@ -14,8 +14,8 @@ import com.dicoding.storyapp.data.retrofit.ApiService
 
 class StoryRepository (private val storyDatabase: StoryDatabase, private val preference: UserPreference, private val apiService: ApiService){
 
+    @OptIn(ExperimentalPagingApi::class)
     fun getStories(): LiveData<PagingData<ListStoryItem>> {
-        @OptIn(ExperimentalPagingApi::class)
         return Pager(
             config = PagingConfig(
                 pageSize = 5
@@ -30,7 +30,6 @@ class StoryRepository (private val storyDatabase: StoryDatabase, private val pre
 
 
     companion object {
-        private const val TAG = "StoryRepository"
 
         @Volatile
         private var instance: StoryRepository? = null

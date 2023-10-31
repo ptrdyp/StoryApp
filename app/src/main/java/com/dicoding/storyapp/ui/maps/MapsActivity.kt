@@ -127,15 +127,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             Log.d("MarkerData", "Name: ${data.name}, Lat: ${data.lat}, Lon: ${data.lon}")
             boundsBuilder.include(latLng)
         }
-        val bounds: LatLngBounds = boundsBuilder.build()
-        mMap.animateCamera(
-            CameraUpdateFactory.newLatLngBounds(
-                bounds,
-                resources.displayMetrics.widthPixels,
-                resources.displayMetrics.heightPixels,
-                300
-            )
-        )
+        val indonesia = LatLng(-0.7893, 113.9213)
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(indonesia))
     }
 
     private fun showLoading() {

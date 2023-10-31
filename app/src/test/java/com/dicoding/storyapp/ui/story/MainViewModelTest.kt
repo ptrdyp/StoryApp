@@ -14,16 +14,15 @@ import com.dicoding.storyapp.data.di.UserPreference
 import com.dicoding.storyapp.data.repository.StoryRepository
 import com.dicoding.storyapp.data.response.ListStoryItem
 import com.dicoding.storyapp.getOrAwaitValue
-import junit.framework.TestCase.assertEquals
-import junit.framework.TestCase.assertNotNull
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
+import org.junit.Assert
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.Mockito.`when`
+import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
 
 @ExperimentalCoroutinesApi
@@ -33,7 +32,7 @@ class MainViewModelTest {
     val instantExecutorRule = InstantTaskExecutorRule()
 
     @get:Rule
-    val mainDispatcherRule = MainDispatcherRule()
+    val mainDispatcherRules = MainDispatcherRule()
 
     @Mock
     private lateinit var storyRepository: StoryRepository
@@ -41,56 +40,56 @@ class MainViewModelTest {
     @Mock
     private lateinit var preference: UserPreference
 
-    private lateinit var mainViewModel: MainViewModel
-    private val dummyStory = DataDummy.generateDummyStoryResponse()
-
     @Test
     fun `when Get Story Should Not Null and Return Data`() = runTest {
+        val dummyStory = DataDummy.generateDummyStoryResponse()
         val data: PagingData<ListStoryItem> = StoryPagingSource.snapshot(dummyStory)
         val expectedStory = MutableLiveData<PagingData<ListStoryItem>>()
         expectedStory.value = data
+        Mockito.`when`(storyRepository.getStories()).thenReturn(expectedStory)
 
-        `when`(storyRepository.getStories()).thenReturn(expectedStory)
-
-        mainViewModel = MainViewModel(preference, storyRepository)
-
+        val mainViewModel = MainViewModel(preference, storyRepository)
         val actualStory: PagingData<ListStoryItem> = mainViewModel.story.getOrAwaitValue()
 
-        val differ = AsyncPagingDataDiffer (
+        val differ = AsyncPagingDataDiffer(
             diffCallback = StoryAdapter.DIFF_CALLBACK,
             updateCallback = noopListUpdateCallback,
             workerDispatcher = Dispatchers.Main,
         )
         differ.submitData(actualStory)
 
-        assertNotNull(differ.snapshot())
-        assertEquals(dummyStory.size, differ.snapshot().size)
-        assertEquals(dummyStory[0], differ.snapshot()[0])
+        Assert.assertNotNull(differ.snapshot())
+        Assert.assertEquals(dummyStory.size, differ.snapshot().size)
+        Assert.assertEquals(dummyStory[0], differ.snapshot()[0])
     }
 
     @Test
-    fun `when Get Quote Empty Should Return No Data`() = runTest {
+    fun `when Get Story Empty Should Return No Data`() = runTest {
         val data: PagingData<ListStoryItem> = PagingData.from(emptyList())
         val expectedStory = MutableLiveData<PagingData<ListStoryItem>>()
         expectedStory.value = data
-        `when`(storyRepository.getStories()).thenReturn(expectedStory)
+        Mockito.`when`(storyRepository.getStories()).thenReturn(expectedStory)
 
-        mainViewModel = MainViewModel(preference, storyRepository)
-
+        val mainViewModel = MainViewModel(preference, storyRepository)
         val actualStory: PagingData<ListStoryItem> = mainViewModel.story.getOrAwaitValue()
 
         val differ = AsyncPagingDataDiffer(
             diffCallback = StoryAdapter.DIFF_CALLBACK,
             updateCallback = noopListUpdateCallback,
-            workerDispatcher = Dispatchers.Main
+            workerDispatcher = Dispatchers.Main,
         )
         differ.submitData(actualStory)
 
-        assertEquals(0, differ.snapshot().size)
+        Assert.assertEquals(0, differ.snapshot().size)
     }
 }
 
 class StoryPagingSource : PagingSource<Int, LiveData<List<ListStoryItem>>>() {
+    companion object {
+        fun snapshot(items: List<ListStoryItem>): PagingData<ListStoryItem> {
+            return PagingData.from(items)
+        }
+    }
 
     override fun getRefreshKey(state: PagingState<Int, LiveData<List<ListStoryItem>>>): Int {
         return 0
@@ -98,11 +97,6 @@ class StoryPagingSource : PagingSource<Int, LiveData<List<ListStoryItem>>>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, LiveData<List<ListStoryItem>>> {
         return LoadResult.Page(emptyList(), 0, 1)
-    }
-    companion object {
-        fun snapshot(items: List<ListStoryItem>): PagingData<ListStoryItem> {
-            return PagingData.from(items)
-        }
     }
 }
 

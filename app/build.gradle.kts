@@ -42,9 +42,7 @@ android {
     }
 
     testOptions {
-        unitTests {
-            isIncludeAndroidResources = true
-        }
+        unitTests.isReturnDefaultValues = true
     }
 
     buildFeatures {
@@ -106,6 +104,6 @@ dependencies {
     androidTestImplementation ("androidx.test.espresso:espresso-intents:3.5.1")
     testImplementation("androidx.arch.core:core-testing:2.2.0")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.1")
-    testImplementation("org.mockito:mockito-core:4.0.0")
+    testImplementation("org.mockito:mockito-core:4.2.0")
     testImplementation("org.mockito:mockito-inline:4.0.0")
 }

@@ -4,7 +4,6 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -84,13 +83,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupUser() {
-        Log.d("MainActivity", "Setup user is called.")
         showLoading()
         mainViewModel.getUser().observe(this) {
-            Log.d("MainActivity", "User isLogin: ${it.isLogin}")
             _token.value = it.token
             if (it.isLogin) {
-                Log.d("TokenDebug", "Stored Token: ${it.token}")
                 setupData()
             } else {
                 moveToWelcomeActivity()

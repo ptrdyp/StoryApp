@@ -1,7 +1,6 @@
 package com.dicoding.storyapp.data.di
 
 import android.content.Context
-import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -28,8 +27,6 @@ class UserPreference private constructor(private val dataStore: DataStore<Prefer
             val name = it[NAME_KEY] ?: ""
             val token = it[TOKEN_KEY] ?: ""
             val isLogin = it[STATE_KEY] ?: false
-
-            Log.d("UserPreference", "Name: $name, Token: $token, IsLogin: $isLogin")
 
             UserModel(name, token, isLogin)
         }

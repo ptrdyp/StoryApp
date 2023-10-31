@@ -1,6 +1,5 @@
 package com.dicoding.storyapp.ui.story
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
@@ -33,7 +32,6 @@ class StoryAdapter : PagingDataAdapter<ListStoryItem, StoryAdapter.MyViewHolder>
                 tvItemDescription.text = story.description
 
                 root.setOnClickListener{
-                    Log.d("StoryAdapter", "Item clicked: ${story.id}")
                     onItemClickCallback?.onItemClicked(story, binding)
                 }
             }

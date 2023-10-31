@@ -1,6 +1,5 @@
 package com.dicoding.storyapp.data.repository
 
-import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.dicoding.storyapp.data.di.UserPreference
@@ -20,13 +19,10 @@ class StoryPagingSource(private val preference: UserPreference, private val apiS
         return try {
             val position = params.key ?: INITIAL_PAGE_INDEX
             val token = preference.getUser().first().token
-            Log.d("StoryPagingSource", "Token before API call: $token")
             val responseData = apiService.getStories(position, params.loadSize)
-            Log.d("StoryPagingSource", "Token after API call: $token")
 
             if (token.isNotEmpty()) {
                 if (responseData.isSuccessful) {
-                    Log.d("StoryPagingSource", "Data loaded: $responseData")
 
                     LoadResult.Page (
                         data = responseData.body()?.listStory ?: emptyList(),
@@ -34,7 +30,6 @@ class StoryPagingSource(private val preference: UserPreference, private val apiS
                         nextKey = if (responseData.body()?.listStory.isNullOrEmpty()) null else position + 1
                     )
                 } else {
-                    Log.d("Token", "Load Error: $token")
                     LoadResult.Error(Exception("Failed"))
                 }
             } else {
@@ -42,7 +37,6 @@ class StoryPagingSource(private val preference: UserPreference, private val apiS
             }
 
         } catch (e: Exception) {
-            Log.e("StoryPagingSource", "Error loading data", e)
             LoadResult.Error(e)
         }
     }
