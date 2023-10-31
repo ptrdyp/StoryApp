@@ -1,6 +1,5 @@
 package com.dicoding.storyapp.data.retrofit
 
-import android.util.Log
 import com.dicoding.storyapp.BuildConfig
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient

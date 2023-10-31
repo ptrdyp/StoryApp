@@ -4,10 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.liveData
-import androidx.lifecycle.viewModelScope
 import com.dicoding.storyapp.data.di.UserPreference
-import com.dicoding.storyapp.data.repository.StoryRepository
 import com.dicoding.storyapp.data.response.DetailStoryResponse
 import com.dicoding.storyapp.data.response.ErrorResponse
 import com.dicoding.storyapp.data.retrofit.ApiConfig
@@ -15,7 +12,6 @@ import com.dicoding.storyapp.data.retrofit.ApiService
 import com.dicoding.storyapp.utils.Event
 import com.google.gson.Gson
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 
 class DetailViewModel (private val preference: UserPreference) : ViewModel() {
     private val _storyItem = MutableLiveData<DetailStoryResponse>()

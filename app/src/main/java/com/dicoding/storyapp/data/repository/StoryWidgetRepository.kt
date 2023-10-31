@@ -2,7 +2,6 @@ package com.dicoding.storyapp.data.repository
 
 import android.appwidget.AppWidgetManager
 import android.graphics.Bitmap
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.dicoding.storyapp.data.di.UserPreference

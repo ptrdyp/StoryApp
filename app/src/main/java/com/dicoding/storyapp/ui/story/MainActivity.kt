@@ -17,7 +17,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dicoding.storyapp.R
 import com.dicoding.storyapp.data.response.ListStoryItem
-import com.dicoding.storyapp.data.retrofit.ApiConfig
 import com.dicoding.storyapp.databinding.ActivityMainBinding
 import com.dicoding.storyapp.databinding.ItemStoryBinding
 import com.dicoding.storyapp.ui.add.AddStoryActivity

@@ -7,9 +7,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
-import androidx.lifecycle.liveData
-import androidx.lifecycle.viewModelScope
-import com.dicoding.storyapp.data.repository.StoryRepository
 import com.dicoding.storyapp.data.di.UserModel
 import com.dicoding.storyapp.data.di.UserPreference
 import com.dicoding.storyapp.data.response.AddStoryResponse
@@ -19,7 +16,6 @@ import com.dicoding.storyapp.data.retrofit.ApiService
 import com.dicoding.storyapp.utils.Event
 import com.google.gson.Gson
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.HttpException
