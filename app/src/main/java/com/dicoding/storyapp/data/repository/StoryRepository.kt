@@ -12,7 +12,11 @@ import com.dicoding.storyapp.data.remote.StoryRemoteMediator
 import com.dicoding.storyapp.data.response.ListStoryItem
 import com.dicoding.storyapp.data.retrofit.ApiService
 
-class StoryRepository (private val storyDatabase: StoryDatabase, private val preference: UserPreference, private val apiService: ApiService){
+class StoryRepository(
+    private val storyDatabase: StoryDatabase,
+    private val preference: UserPreference,
+    private val apiService: ApiService
+) {
 
     @OptIn(ExperimentalPagingApi::class)
     fun getStories(): LiveData<PagingData<ListStoryItem>> {
@@ -22,7 +26,6 @@ class StoryRepository (private val storyDatabase: StoryDatabase, private val pre
             ),
             remoteMediator = StoryRemoteMediator(storyDatabase, apiService),
             pagingSourceFactory = {
-//                StoryPagingSource(preference, apiService)
                 storyDatabase.storyDao().getAllStory()
             }
         ).liveData
@@ -34,7 +37,11 @@ class StoryRepository (private val storyDatabase: StoryDatabase, private val pre
         @Volatile
         private var instance: StoryRepository? = null
 
-        fun getInstance(storyDatabase: StoryDatabase, preference: UserPreference, apiService: ApiService) =
+        fun getInstance(
+            storyDatabase: StoryDatabase,
+            preference: UserPreference,
+            apiService: ApiService
+        ) =
             instance ?: synchronized(this) {
                 instance ?: StoryRepository(storyDatabase, preference, apiService)
             }.also {

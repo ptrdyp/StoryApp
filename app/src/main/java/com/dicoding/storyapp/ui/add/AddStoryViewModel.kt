@@ -14,16 +14,20 @@ import com.dicoding.storyapp.data.response.ErrorResponse
 import com.dicoding.storyapp.data.retrofit.ApiConfig
 import com.dicoding.storyapp.data.retrofit.ApiService
 import com.dicoding.storyapp.utils.Event
+import com.dicoding.storyapp.utils.reduceFileImage
+import com.dicoding.storyapp.utils.uriToFile
 import com.google.gson.Gson
 import kotlinx.coroutines.flow.first
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import retrofit2.HttpException
 
 class AddStoryViewModel(private val preference: UserPreference) : ViewModel() {
     var currentImageUri: Uri? = null
     var description: String = ""
-    var currentLocation: Location? = null
+    private var currentLocation: Location? = null
 
     private val _addStory = MutableLiveData<AddStoryResponse>()
     val addStory: LiveData<AddStoryResponse> = _addStory
@@ -64,10 +68,6 @@ class AddStoryViewModel(private val preference: UserPreference) : ViewModel() {
         } finally {
             _isLoading.value = false
         }
-    }
-
-    fun getUser(): LiveData<UserModel>{
-        return preference.getUser().asLiveData()
     }
 
     fun saveInstanceState(imageUri: Uri?, description: String, currentLocation: Location?) {

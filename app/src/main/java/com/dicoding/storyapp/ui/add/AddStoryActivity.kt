@@ -169,9 +169,9 @@ class  AddStoryActivity : AppCompatActivity() {
         } else if (description == "") {
             Toast.makeText(this, getString(R.string.description_is_required), Toast.LENGTH_SHORT).show()
         } else {
-            addStoryViewModel.getUser().observe(this) {
+            lifecycleScope.launch {
                 currentImageUri?.let { uri ->
-                    val imageFile = uriToFile(uri, this).reduceFileImage()
+                    val imageFile = uriToFile(uri, this@AddStoryActivity).reduceFileImage()
                     val requestImageFile = imageFile.asRequestBody("image/jpeg".toMediaType())
                     val multipartBody = MultipartBody.Part.createFormData(
                         "photo", imageFile.name, requestImageFile
